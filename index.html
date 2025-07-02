@@ -24,47 +24,46 @@
   <ul id="books-list">Lade Daten...</ul>
 
   <script>
-    const supabase = supabase.createClient(
-      'https://gbojxrkzwgjftdhzmyqg.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdib2p4cmt6d2dqZnRkaHpteXFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDU4NzMsImV4cCI6MjA2NjQyMTg3M30.6GrxaH4cZm6Sr0sfx41OjG-pAifflSnFvrzfbFwf7i8'
-    );
+  const client = supabase.createClient(
+    'https://gbojxrkzwgjftdhzmyqg.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdib2p4cmt6d2dqZnRkaHpteXFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDU4NzMsImV4cCI6MjA2NjQyMTg3M30.6GrxaH4cZm6Sr0sfx41OjG-pAifflSnFvrzfbFwf7i8'
+  );
 
-    async function loadData() {
-      const authorsList = document.getElementById('authors-list');
-      const booksList = document.getElementById('books-list');
+  async function loadData() {
+    const authorsList = document.getElementById('authors-list');
+    const booksList = document.getElementById('books-list');
 
-      // Autoren laden
-      const { data: authors, error: authorsError } = await supabase.from('authors').select('*');
-      authorsList.innerHTML = '';
-      if (authorsError) {
-        authorsList.innerHTML = '<li class="error">❌ Fehler beim Laden der Autoren: ' + authorsError.message + '</li>';
-      } else if (authors.length === 0) {
-        authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
-      } else {
-        authors.forEach(author => {
-          const li = document.createElement('li');
-          li.innerHTML = '<code>' + JSON.stringify(author) + '</code>';
-          authorsList.appendChild(li);
-        });
-      }
-
-      // Bücher laden
-      const { data: books, error: booksError } = await supabase.from('books').select('*');
-      booksList.innerHTML = '';
-      if (booksError) {
-        booksList.innerHTML = '<li class="error">❌ Fehler beim Laden der Bücher: ' + booksError.message + '</li>';
-      } else if (books.length === 0) {
-        booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
-      } else {
-        books.forEach(book => {
-          const li = document.createElement('li');
-          li.innerHTML = '<code>' + JSON.stringify(book) + '</code>';
-          booksList.appendChild(li);
-        });
-      }
+    const { data: authors, error: authorsError } = await client.from('authors').select('*');
+    authorsList.innerHTML = '';
+    if (authorsError) {
+      authorsList.innerHTML = '<li class="error">❌ Fehler beim Laden der Autoren: ' + authorsError.message + '</li>';
+    } else if (authors.length === 0) {
+      authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
+    } else {
+      authors.forEach(author => {
+        const li = document.createElement('li');
+        li.innerHTML = '<code>' + JSON.stringify(author) + '</code>';
+        authorsList.appendChild(li);
+      });
     }
 
-    loadData();
-  </script>
+    const { data: books, error: booksError } = await client.from('books').select('*');
+    booksList.innerHTML = '';
+    if (booksError) {
+      booksList.innerHTML = '<li class="error">❌ Fehler beim Laden der Bücher: ' + booksError.message + '</li>';
+    } else if (books.length === 0) {
+      booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
+    } else {
+      books.forEach(book => {
+        const li = document.createElement('li');
+        li.innerHTML = '<code>' + JSON.stringify(book) + '</code>';
+        booksList.appendChild(li);
+      });
+    }
+  }
+
+  loadData();
+</script>
+
 </body>
 </html>
