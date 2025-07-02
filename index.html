@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Supabase Datenanzeige - base2</title>
-  <!-- Supabase JS v2 als UMD-Bundle laden -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- Supabase SDK laden mit defer, damit es vor eigenem Script vollständig da ist -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
     h1 { text-align: center; }
@@ -22,55 +22,52 @@
   <h2>Bücher (books)</h2>
   <ul id="books-list">Lade Bücher...</ul>
 
-  <script>
-    const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNmfGNyaWlsbGVyLmcwIiwiZGVmYXVsdCI6dHJ1ZX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
+  <!-- Eigenes Script mit defer laden -->
+  <script defer>
+    // Warte bis Supabase SDK geladen ist
+    window.addEventListener('load', () => {
+      const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNmfGNyaWlsbGVyLmcwIiwiZGVmYXVsdCI6dHJ1ZX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
 
-    // Supabase Client initialisieren (aus dem globalen "supabase" Objekt)
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    async function loadData() {
-      const authorsList = document.getElementById('authors-list');
-      const booksList = document.getElementById('books-list');
+      async function loadData() {
+        const authorsList = document.getElementById('authors-list');
+        const booksList = document.getElementById('books-list');
 
-      // Autoren laden
-      const { data: authors, error: authorsError } = await supabase
-        .from('authors')
-        .select('name, bio');
+        // Autoren laden
+        const { data: authors, error: authorsError } = await supabase.from('authors').select('name, bio');
+        authorsList.innerHTML = '';
+        if (authorsError) {
+          authorsList.innerHTML = `<li class="error">Fehler beim Laden der Autoren: ${authorsError.message}</li>`;
+        } else if (!authors || authors.length === 0) {
+          authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
+        } else {
+          authors.forEach(author => {
+            const li = document.createElement('li');
+            li.textContent = author.name + (author.bio ? ' – ' + author.bio : '');
+            authorsList.appendChild(li);
+          });
+        }
 
-      authorsList.innerHTML = '';
-      if (authorsError) {
-        authorsList.innerHTML = `<li class="error">Fehler beim Laden der Autoren: ${authorsError.message}</li>`;
-      } else if (!authors || authors.length === 0) {
-        authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
-      } else {
-        authors.forEach(author => {
-          const li = document.createElement('li');
-          li.textContent = author.name + (author.bio ? ' – ' + author.bio : '');
-          authorsList.appendChild(li);
-        });
+        // Bücher laden
+        const { data: books, error: booksError } = await supabase.from('books').select('title, author_id');
+        booksList.innerHTML = '';
+        if (booksError) {
+          booksList.innerHTML = `<li class="error">Fehler beim Laden der Bücher: ${booksError.message}</li>`;
+        } else if (!books || books.length === 0) {
+          booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
+        } else {
+          books.forEach(book => {
+            const li = document.createElement('li');
+            li.textContent = book.title + ' (Autor ID: ' + book.author_id + ')';
+            booksList.appendChild(li);
+          });
+        }
       }
 
-      // Bücher laden
-      const { data: books, error: booksError } = await supabase
-        .from('books')
-        .select('title, author_id');
-
-      booksList.innerHTML = '';
-      if (booksError) {
-        booksList.innerHTML = `<li class="error">Fehler beim Laden der Bücher: ${booksError.message}</li>`;
-      } else if (!books || books.length === 0) {
-        booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
-      } else {
-        books.forEach(book => {
-          const li = document.createElement('li');
-          li.textContent = book.title + ' (Autor ID: ' + book.author_id + ')';
-          booksList.appendChild(li);
-        });
-      }
-    }
-
-    window.onload = loadData;
+      loadData();
+    });
   </script>
 </body>
 </html>
