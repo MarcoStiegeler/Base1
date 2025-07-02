@@ -5,10 +5,13 @@
   <title>Supabase Data Viewer</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+    h1 { text-align: center; }
     h2 { margin-top: 40px; }
     ul { list-style-type: none; padding-left: 0; }
-    li { background: #f0f0f0; margin: 5px 0; padding: 10px; border-radius: 6px; }
+    li { background: #f9f9f9; margin: 5px 0; padding: 10px; border-left: 4px solid #0070f3; border-radius: 4px; }
+    code { font-family: monospace; font-size: 0.9em; color: #333; }
+    .error { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -30,30 +33,32 @@
       const authorsList = document.getElementById('authors-list');
       const booksList = document.getElementById('books-list');
 
-      const { data: authors, error: authorsError } = await supabase
-        .from('authors')
-        .select('*');
+      // Autoren laden
+      const { data: authors, error: authorsError } = await supabase.from('authors').select('*');
       authorsList.innerHTML = '';
       if (authorsError) {
-        authorsList.innerHTML = '<li>Fehler beim Laden der Autoren</li>';
+        authorsList.innerHTML = '<li class="error">❌ Fehler beim Laden der Autoren: ' + authorsError.message + '</li>';
+      } else if (authors.length === 0) {
+        authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
       } else {
         authors.forEach(author => {
           const li = document.createElement('li');
-          li.textContent = JSON.stringify(author);
+          li.innerHTML = '<code>' + JSON.stringify(author) + '</code>';
           authorsList.appendChild(li);
         });
       }
 
-      const { data: books, error: booksError } = await supabase
-        .from('books')
-        .select('*');
+      // Bücher laden
+      const { data: books, error: booksError } = await supabase.from('books').select('*');
       booksList.innerHTML = '';
       if (booksError) {
-        booksList.innerHTML = '<li>Fehler beim Laden der Bücher</li>';
+        booksList.innerHTML = '<li class="error">❌ Fehler beim Laden der Bücher: ' + booksError.message + '</li>';
+      } else if (books.length === 0) {
+        booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
       } else {
         books.forEach(book => {
           const li = document.createElement('li');
-          li.textContent = JSON.stringify(book);
+          li.innerHTML = '<code>' + JSON.stringify(book) + '</code>';
           booksList.appendChild(li);
         });
       }
