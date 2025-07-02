@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Supabase Data Viewer</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { margin-top: 40px; }
+    ul { list-style-type: none; padding-left: 0; }
+    li { background: #f0f0f0; margin: 5px 0; padding: 10px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>📚 Öffentliche Supabase-Daten</h1>
+
+  <h2>👨‍💼 Autoren (authors)</h2>
+  <ul id="authors-list">Lade Daten...</ul>
+
+  <h2>📖 Bücher (books)</h2>
+  <ul id="books-list">Lade Daten...</ul>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://gbojxrkzwgjftdhzmyqg.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdib2p4cmt6d2dqZnRkaHpteXFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDU4NzMsImV4cCI6MjA2NjQyMTg3M30.6GrxaH4cZm6Sr0sfx41OjG-pAifflSnFvrzfbFwf7i8'
+    );
+
+    async function loadData() {
+      const authorsList = document.getElementById('authors-list');
+      const booksList = document.getElementById('books-list');
+
+      const { data: authors, error: authorsError } = await supabase
+        .from('authors')
+        .select('*');
+      authorsList.innerHTML = '';
+      if (authorsError) {
+        authorsList.innerHTML = '<li>Fehler beim Laden der Autoren</li>';
+      } else {
+        authors.forEach(author => {
+          const li = document.createElement('li');
+          li.textContent = JSON.stringify(author);
+          authorsList.appendChild(li);
+        });
+      }
+
+      const { data: books, error: booksError } = await supabase
+        .from('books')
+        .select('*');
+      booksList.innerHTML = '';
+      if (booksError) {
+        booksList.innerHTML = '<li>Fehler beim Laden der Bücher</li>';
+      } else {
+        books.forEach(book => {
+          const li = document.createElement('li');
+          li.textContent = JSON.stringify(book);
+          booksList.appendChild(li);
+        });
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
