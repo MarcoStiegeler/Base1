@@ -2,8 +2,8 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Supabase Datenanzeige</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <title>Supabase Datenanzeige - base2</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
     h1 { text-align: center; }
@@ -13,57 +13,65 @@
   </style>
 </head>
 <body>
-  <h1>📚 Supabase Daten</h1>
+  <h1>Supabase Daten - Projekt base2</h1>
 
-  <h2>👨‍💼 Autoren</h2>
+  <h2>Autoren (authors)</h2>
   <ul id="authors-list">Lade Autoren...</ul>
 
-  <h2>📖 Bücher</h2>
+  <h2>Bücher (books)</h2>
   <ul id="books-list">Lade Bücher...</ul>
 
   <script>
-    // Hier deine Supabase URL und dein anon public Key einfügen
-    const SUPABASE_URL = 'https://gbojxrkzwgjftdhzmyqg.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdib2p4cmt6d2dqZnRkaHpteXFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDU4NzMsImV4cCI6MjA2NjQyMTg3M30.6GrxaH4cZm6Sr0sfx41OjG-pAifflSnFvrzfbFwf7i8';
+    // Supabase Config - so wie von dir angegeben
+    const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNmfGNyaWlsbGVyLmcwIiwiZGVmYXVsdCI6dHJ1ZX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
 
-    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Supabase Client initialisieren
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function loadData() {
       const authorsList = document.getElementById('authors-list');
       const booksList = document.getElementById('books-list');
 
       // Autoren laden
-      const { data: authors, error: authorsError } = await client.from('authors').select('*');
+      const { data: authors, error: authorsError } = await supabase
+        .from('authors')
+        .select('name, bio');
+
       authorsList.innerHTML = '';
       if (authorsError) {
-        authorsList.innerHTML = '<li class="error">Fehler beim Laden der Autoren: ' + authorsError.message + '</li>';
+        authorsList.innerHTML = `<li class="error">Fehler beim Laden der Autoren: ${authorsError.message}</li>`;
       } else if (!authors || authors.length === 0) {
         authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
       } else {
         authors.forEach(author => {
           const li = document.createElement('li');
-          li.textContent = author.name || JSON.stringify(author);
+          li.textContent = author.name + (author.bio ? ' – ' + author.bio : '');
           authorsList.appendChild(li);
         });
       }
 
       // Bücher laden
-      const { data: books, error: booksError } = await client.from('books').select('*');
+      const { data: books, error: booksError } = await supabase
+        .from('books')
+        .select('title, author_id');
+
       booksList.innerHTML = '';
       if (booksError) {
-        booksList.innerHTML = '<li class="error">Fehler beim Laden der Bücher: ' + booksError.message + '</li>';
+        booksList.innerHTML = `<li class="error">Fehler beim Laden der Bücher: ${booksError.message}</li>`;
       } else if (!books || books.length === 0) {
         booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
       } else {
         books.forEach(book => {
           const li = document.createElement('li');
-          li.textContent = book.title || JSON.stringify(book);
+          li.textContent = book.title + ' (Autor ID: ' + book.author_id + ')';
           booksList.appendChild(li);
         });
       }
     }
 
-    loadData();
+    // Daten laden, sobald Seite fertig geladen ist
+    window.onload = loadData;
   </script>
 </body>
 </html>
