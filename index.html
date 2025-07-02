@@ -58,9 +58,9 @@
       const authorsList = document.getElementById('authors-list');
       const booksList = document.getElementById('books-list');
 
-      // Autoren aus base1_schema.authors laden
+      // Autoren aus public.authors laden
       const { data: authors, error: authorsError } = await client
-        .from('base1_schema.authors')
+        .from('authors')
         .select('*');
       authorsList.innerHTML = '';
       if (authorsError) {
@@ -78,9 +78,9 @@
         });
       }
 
-      // Bücher aus base1_schema.books laden
+      // Bücher aus public.books laden
       const { data: books, error: booksError } = await client
-        .from('base1_schema.books')
+        .from('books')
         .select('*');
       booksList.innerHTML = '';
       if (booksError) {
