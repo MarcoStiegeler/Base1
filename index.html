@@ -2,86 +2,59 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Supabase Data Viewer</title>
+  <title>Supabase Demo</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-    }
-    h2 {
-      margin-top: 40px;
-    }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    li {
-      background: #f9f9f9;
-      margin: 5px 0;
-      padding: 10px;
-      border-left: 4px solid #0070f3;
-      border-radius: 4px;
-    }
-    code {
-      font-family: monospace;
-      font-size: 0.9em;
-      color: #333;
-    }
-    .error {
-      color: red;
-      font-weight: bold;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+    h1 { text-align: center; }
+    ul { list-style: none; padding: 0; }
+    li { background: #f0f0f0; margin: 5px 0; padding: 10px; border-radius: 4px; }
+    .error { color: red; font-weight: bold; }
   </style>
 </head>
 <body>
-  <h1>📚 Öffentliche Supabase-Daten</h1>
+  <h1>Supabase Daten</h1>
 
-  <h2>👨‍💼 Autoren (authors)</h2>
-  <ul id="authors-list">Lade Daten...</ul>
+  <h2>Autoren</h2>
+  <ul id="authors-list">Lade Autoren...</ul>
 
-  <h2>📖 Bücher (books)</h2>
-  <ul id="books-list">Lade Daten...</ul>
+  <h2>Bücher</h2>
+  <ul id="books-list">Lade Bücher...</ul>
 
   <script>
-    const supabaseUrl = 'https://gbojxrkzwgjftdhzmyqg.supabase.co';
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdib2p4cmt6d2dqZnRkaHpteXFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDU4NzMsImV4cCI6MjA2NjQyMTg3M30.6GrxaH4cZm6Sr0sfx41OjG-pAifflSnFvrzfbFwf7i8';
+    const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNkbWZjbnJpeWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NDIzODUsImV4cCI6MjA2NzAxODM4NX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
 
-    const client = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function loadData() {
       const authorsList = document.getElementById('authors-list');
       const booksList = document.getElementById('books-list');
 
-      const { data: authors, error: authorsError } = await client.from('authors').select('*');
-      authorsList.innerHTML = '';
+      const { data: authors, error: authorsError } = await supabase.from('authors').select('*');
       if (authorsError) {
-        authorsList.innerHTML = '<li class="error">❌ Fehler beim Laden der Autoren: ' + authorsError.message + '</li>';
+        authorsList.innerHTML = '<li class="error">Fehler beim Laden der Autoren: ' + authorsError.message + '</li>';
       } else if (!authors || authors.length === 0) {
         authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
       } else {
+        authorsList.innerHTML = '';
         authors.forEach(author => {
           const li = document.createElement('li');
-          li.innerHTML = '<code>' + JSON.stringify(author) + '</code>';
+          li.textContent = author.name + ' – ' + (author.bio || '');
           authorsList.appendChild(li);
         });
       }
 
-      const { data: books, error: booksError } = await client.from('books').select('*');
-      booksList.innerHTML = '';
+      const { data: books, error: booksError } = await supabase.from('books').select('*');
       if (booksError) {
-        booksList.innerHTML = '<li class="error">❌ Fehler beim Laden der Bücher: ' + booksError.message + '</li>';
+        booksList.innerHTML = '<li class="error">Fehler beim Laden der Bücher: ' + booksError.message + '</li>';
       } else if (!books || books.length === 0) {
         booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
       } else {
+        booksList.innerHTML = '';
         books.forEach(book => {
           const li = document.createElement('li');
-          li.innerHTML = '<code>' + JSON.stringify(book) + '</code>';
+          li.textContent = book.title + ' (Autor ID: ' + book.author_id + ')';
           booksList.appendChild(li);
         });
       }
