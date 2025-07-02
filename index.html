@@ -2,24 +2,323 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Supabase Datenanzeige - base2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bibliothek - base2</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 15px; }
-    h1, h2 { text-align: center; }
-    ul { list-style: none; padding: 0; }
-    li { background: #f0f0f0; margin: 6px 0; padding: 10px; border-radius: 5px; }
-    .error { color: red; font-weight: bold; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #1d1d1f;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #000 0%, #333 100%);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      opacity: 0.3;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      position: relative;
+      z-index: 1;
+    }
+
+    .content {
+      padding: 60px 40px;
+    }
+
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .section-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .section h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .card-subtitle {
+      font-size: 0.95rem;
+      color: #86868b;
+      margin-bottom: 12px;
+    }
+
+    .card-description {
+      font-size: 1rem;
+      color: #515154;
+      line-height: 1.6;
+    }
+
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      color: #86868b;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #86868b;
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+      justify-content: center;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      min-width: 120px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #667eea;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #86868b;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: 40px 20px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .content {
+        padding: 40px 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Supabase Daten - Projekt base2</h1>
+  <div class="container">
+    <div class="hero">
+      <h1>Bibliothek</h1>
+      <p>Entdecken Sie unsere Sammlung von Autoren und Büchern</p>
+      <div class="stats" id="stats" style="display: none;">
+        <div class="stat">
+          <span class="stat-number" id="authors-count">0</span>
+          <span class="stat-label">Autoren</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" id="books-count">0</span>
+          <span class="stat-label">Bücher</span>
+        </div>
+      </div>
+    </div>
 
-  <h2>Autoren (authors)</h2>
-  <ul id="authors-list">Lade Autoren...</ul>
+    <div class="content">
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon">A</div>
+          <h2>Autoren</h2>
+        </div>
+        <div id="authors-content">
+          <div class="loading">
+            <div class="spinner"></div>
+            <span>Lade Autoren...</span>
+          </div>
+        </div>
+      </div>
 
-  <h2>Bücher (books)</h2>
-  <ul id="books-list">Lade Bücher...</ul>
+      <div class="section">
+        <div class="section-header">
+          <div class="section-icon">B</div>
+          <h2>Bücher</h2>
+        </div>
+        <div id="books-content">
+          <div class="loading">
+            <div class="spinner"></div>
+            <span>Lade Bücher...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     async function waitForSupabase() {
@@ -36,45 +335,92 @@
       });
     }
 
+    function createCard(title, subtitle, description) {
+      return `
+        <div class="card">
+          <div class="card-title">${title}</div>
+          ${subtitle ? `<div class="card-subtitle">${subtitle}</div>` : ''}
+          ${description ? `<div class="card-description">${description}</div>` : ''}
+        </div>
+      `;
+    }
+
+    function showError(container, message) {
+      container.innerHTML = `<div class="error">⚠️ Fehler beim Laden: ${message}</div>`;
+    }
+
+    function showEmptyState(container, icon, message) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">${icon}</div>
+          <div>${message}</div>
+        </div>
+      `;
+    }
+
+    function updateStats(authorsCount, booksCount) {
+      document.getElementById('authors-count').textContent = authorsCount;
+      document.getElementById('books-count').textContent = booksCount;
+      document.getElementById('stats').style.display = 'flex';
+    }
+
     (async () => {
-      await waitForSupabase();
+      try {
+        await waitForSupabase();
+        
+        const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNkbWZjbnJpeWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NDIzODUsImV4cCI6MjA2NzAxODM4NX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
-      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNkbWZjbnJpeWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NDIzODUsImV4cCI6MjA2NzAxODM4NX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
+        const authorsContainer = document.getElementById('authors-content');
+        const booksContainer = document.getElementById('books-content');
 
-      const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Autoren laden
+        const { data: authors, error: authorsError } = await client.from('authors').select('name, bio');
+        
+        if (authorsError) {
+          showError(authorsContainer, authorsError.message);
+        } else if (!authors || authors.length === 0) {
+          showEmptyState(authorsContainer, '👤', 'Keine Autoren gefunden');
+        } else {
+          const authorsHTML = authors.map(author => 
+            createCard(
+              author.name,
+              'Autor',
+              author.bio || 'Keine Biografie verfügbar'
+            )
+          ).join('');
+          authorsContainer.innerHTML = `<div class="grid">${authorsHTML}</div>`;
+        }
 
-      const authorsList = document.getElementById('authors-list');
-      const booksList = document.getElementById('books-list');
+        // Bücher laden
+        const { data: books, error: booksError } = await client.from('books').select('title, author_id');
+        
+        if (booksError) {
+          showError(booksContainer, booksError.message);
+        } else if (!books || books.length === 0) {
+          showEmptyState(booksContainer, '📚', 'Keine Bücher gefunden');
+        } else {
+          const booksHTML = books.map(book => 
+            createCard(
+              book.title,
+              'Buch',
+              book.author_id ? `Autor ID: ${book.author_id}` : 'Autor unbekannt'
+            )
+          ).join('');
+          booksContainer.innerHTML = `<div class="grid">${booksHTML}</div>`;
+        }
 
-      // Autoren laden
-      const { data: authors, error: authorsError } = await client.from('authors').select('name, bio');
-      authorsList.innerHTML = '';
-      if (authorsError) {
-        authorsList.innerHTML = `<li class="error">Fehler beim Laden der Autoren: ${authorsError.message}</li>`;
-      } else if (!authors || authors.length === 0) {
-        authorsList.innerHTML = '<li>Keine Autoren gefunden.</li>';
-      } else {
-        authors.forEach(author => {
-          const li = document.createElement('li');
-          li.textContent = author.name + (author.bio ? ' – ' + author.bio : '');
-          authorsList.appendChild(li);
-        });
-      }
+        // Statistiken aktualisieren
+        updateStats(
+          authors ? authors.length : 0,
+          books ? books.length : 0
+        );
 
-      // Bücher laden
-      const { data: books, error: booksError } = await client.from('books').select('title, author_id');
-      booksList.innerHTML = '';
-      if (booksError) {
-        booksList.innerHTML = `<li class="error">Fehler beim Laden der Bücher: ${booksError.message}</li>`;
-      } else if (!books || books.length === 0) {
-        booksList.innerHTML = '<li>Keine Bücher gefunden.</li>';
-      } else {
-        books.forEach(book => {
-          const li = document.createElement('li');
-          li.textContent = book.title + (book.author_id ? ` (Autor ID: ${book.author_id})` : '');
-          booksList.appendChild(li);
-        });
+      } catch (error) {
+        console.error('Fehler beim Initialisieren:', error);
+        document.getElementById('authors-content').innerHTML = `<div class="error">Unerwarteter Fehler: ${error.message}</div>`;
+        document.getElementById('books-content').innerHTML = `<div class="error">Unerwarteter Fehler: ${error.message}</div>`;
       }
     })();
   </script>
