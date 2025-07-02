@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bibliothek - base2</title>
+  <title>Bibliothek - CRUD</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     * {
@@ -96,9 +96,15 @@
     .section-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 32px;
       padding-bottom: 16px;
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
     }
 
     .section-icon {
@@ -118,6 +124,26 @@
       font-size: 2.2rem;
       font-weight: 600;
       color: #1d1d1f;
+    }
+
+    .add-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     }
 
     .grid {
@@ -158,6 +184,10 @@
       transform: scaleX(1);
     }
 
+    .card-content {
+      margin-bottom: 16px;
+    }
+
     .card-title {
       font-size: 1.3rem;
       font-weight: 600;
@@ -176,6 +206,191 @@
       font-size: 1rem;
       color: #515154;
       line-height: 1.6;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      padding-top: 16px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-edit {
+      background: #f0f0f0;
+      color: #1d1d1f;
+    }
+
+    .btn-edit:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-delete {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background: #ff5252;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #86868b;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .close-btn:hover {
+      background: #f0f0f0;
+      color: #1d1d1f;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #1d1d1f;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #1d1d1f;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
     }
 
     .loading {
@@ -250,6 +465,31 @@
       margin-top: 4px;
     }
 
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 16px 24px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 500;
+      z-index: 1001;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .notification.success {
+      background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    }
+
+    .notification.error {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    }
+
     @media (max-width: 768px) {
       .hero {
         padding: 40px 20px;
@@ -271,6 +511,10 @@
         flex-direction: column;
         align-items: center;
       }
+
+      .modal-content {
+        padding: 24px;
+      }
     }
   </style>
 </head>
@@ -278,7 +522,7 @@
   <div class="container">
     <div class="hero">
       <h1>Bibliothek</h1>
-      <p>Entdecken Sie unsere Sammlung von Autoren und Büchern</p>
+      <p>Verwalten Sie Ihre Sammlung von Autoren und Büchern</p>
       <div class="stats" id="stats" style="display: none;">
         <div class="stat">
           <span class="stat-number" id="authors-count">0</span>
@@ -294,8 +538,14 @@
     <div class="content">
       <div class="section">
         <div class="section-header">
-          <div class="section-icon">A</div>
-          <h2>Autoren</h2>
+          <div class="section-title">
+            <div class="section-icon">A</div>
+            <h2>Autoren</h2>
+          </div>
+          <button class="add-btn" onclick="openAuthorModal()">
+            <span>+</span>
+            Autor hinzufügen
+          </button>
         </div>
         <div id="authors-content">
           <div class="loading">
@@ -307,8 +557,14 @@
 
       <div class="section">
         <div class="section-header">
-          <div class="section-icon">B</div>
-          <h2>Bücher</h2>
+          <div class="section-title">
+            <div class="section-icon">B</div>
+            <h2>Bücher</h2>
+          </div>
+          <button class="add-btn" onclick="openBookModal()">
+            <span>+</span>
+            Buch hinzufügen
+          </button>
         </div>
         <div id="books-content">
           <div class="loading">
@@ -320,7 +576,63 @@
     </div>
   </div>
 
+  <!-- Author Modal -->
+  <div id="authorModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="authorModalTitle">Autor hinzufügen</h3>
+        <button class="close-btn" onclick="closeModal('authorModal')">&times;</button>
+      </div>
+      <form id="authorForm">
+        <div class="form-group">
+          <label class="form-label" for="authorName">Name *</label>
+          <input type="text" id="authorName" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="authorBio">Biografie</label>
+          <textarea id="authorBio" class="form-textarea" placeholder="Optionale Biografie des Autors..."></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('authorModal')">Abbrechen</button>
+          <button type="submit" class="btn-primary">Speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Book Modal -->
+  <div id="bookModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="bookModalTitle">Buch hinzufügen</h3>
+        <button class="close-btn" onclick="closeModal('bookModal')">&times;</button>
+      </div>
+      <form id="bookForm">
+        <div class="form-group">
+          <label class="form-label" for="bookTitle">Titel *</label>
+          <input type="text" id="bookTitle" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="bookAuthor">Autor</label>
+          <select id="bookAuthor" class="form-select">
+            <option value="">Autor auswählen...</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('bookModal')">Abbrechen</button>
+          <button type="submit" class="btn-primary">Speichern</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
+    let client;
+    let currentEditingAuthor = null;
+    let currentEditingBook = null;
+    let authorsData = [];
+    let booksData = [];
+
     async function waitForSupabase() {
       return new Promise(resolve => {
         if (window.supabase) resolve();
@@ -335,18 +647,111 @@
       });
     }
 
-    function createCard(title, subtitle, description) {
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => notification.classList.add('show'), 100);
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => document.body.removeChild(notification), 300);
+      }, 3000);
+    }
+
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('show');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('show');
+      if (modalId === 'authorModal') {
+        currentEditingAuthor = null;
+        document.getElementById('authorForm').reset();
+        document.getElementById('authorModalTitle').textContent = 'Autor hinzufügen';
+      } else if (modalId === 'bookModal') {
+        currentEditingBook = null;
+        document.getElementById('bookForm').reset();
+        document.getElementById('bookModalTitle').textContent = 'Buch hinzufügen';
+      }
+    }
+
+    function openAuthorModal(author = null) {
+      if (author) {
+        currentEditingAuthor = author;
+        document.getElementById('authorModalTitle').textContent = 'Autor bearbeiten';
+        document.getElementById('authorName').value = author.name;
+        document.getElementById('authorBio').value = author.bio || '';
+      }
+      openModal('authorModal');
+    }
+
+    function openBookModal(book = null) {
+      populateAuthorSelect();
+      if (book) {
+        currentEditingBook = book;
+        document.getElementById('bookModalTitle').textContent = 'Buch bearbeiten';
+        document.getElementById('bookTitle').value = book.title;
+        document.getElementById('bookAuthor').value = book.author_id || '';
+      }
+      openModal('bookModal');
+    }
+
+    function populateAuthorSelect() {
+      const select = document.getElementById('bookAuthor');
+      select.innerHTML = '<option value="">Autor auswählen...</option>';
+      authorsData.forEach(author => {
+        const option = document.createElement('option');
+        option.value = author.id;
+        option.textContent = author.name;
+        select.appendChild(option);
+      });
+    }
+
+    function createAuthorCard(author) {
       return `
         <div class="card">
-          <div class="card-title">${title}</div>
-          ${subtitle ? `<div class="card-subtitle">${subtitle}</div>` : ''}
-          ${description ? `<div class="card-description">${description}</div>` : ''}
+          <div class="card-content">
+            <div class="card-title">${author.name}</div>
+            <div class="card-subtitle">Autor</div>
+            ${author.bio ? `<div class="card-description">${author.bio}</div>` : '<div class="card-description">Keine Biografie verfügbar</div>'}
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-edit" onclick="openAuthorModal(${JSON.stringify(author).replace(/"/g, '&quot;')})">
+              ✏️ Bearbeiten
+            </button>
+            <button class="btn btn-delete" onclick="deleteAuthor(${author.id})">
+              🗑️ Löschen
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function createBookCard(book) {
+      const author = authorsData.find(a => a.id === book.author_id);
+      return `
+        <div class="card">
+          <div class="card-content">
+            <div class="card-title">${book.title}</div>
+            <div class="card-subtitle">Buch</div>
+            <div class="card-description">${author ? `Von: ${author.name}` : 'Autor unbekannt'}</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-edit" onclick="openBookModal(${JSON.stringify(book).replace(/"/g, '&quot;')})">
+              ✏️ Bearbeiten
+            </button>
+            <button class="btn btn-delete" onclick="deleteBook(${book.id})">
+              🗑️ Löschen
+            </button>
+          </div>
         </div>
       `;
     }
 
     function showError(container, message) {
-      container.innerHTML = `<div class="error">⚠️ Fehler beim Laden: ${message}</div>`;
+      container.innerHTML = `<div class="error">⚠️ Fehler: ${message}</div>`;
     }
 
     function showEmptyState(container, icon, message) {
@@ -358,69 +763,178 @@
       `;
     }
 
-    function updateStats(authorsCount, booksCount) {
-      document.getElementById('authors-count').textContent = authorsCount;
-      document.getElementById('books-count').textContent = booksCount;
+    function updateStats() {
+      document.getElementById('authors-count').textContent = authorsData.length;
+      document.getElementById('books-count').textContent = booksData.length;
       document.getElementById('stats').style.display = 'flex';
     }
 
+    async function loadAuthors() {
+      try {
+        const { data: authors, error } = await client.from('authors').select('*').order('name');
+        if (error) throw error;
+        
+        authorsData = authors || [];
+        const container = document.getElementById('authors-content');
+        
+        if (authorsData.length === 0) {
+          showEmptyState(container, '👤', 'Keine Autoren gefunden');
+        } else {
+          const authorsHTML = authorsData.map(createAuthorCard).join('');
+          container.innerHTML = `<div class="grid">${authorsHTML}</div>`;
+        }
+      } catch (error) {
+        showError(document.getElementById('authors-content'), error.message);
+      }
+    }
+
+    async function loadBooks() {
+      try {
+        const { data: books, error } = await client.from('books').select('*').order('title');
+        if (error) throw error;
+        
+        booksData = books || [];
+        const container = document.getElementById('books-content');
+        
+        if (booksData.length === 0) {
+          showEmptyState(container, '📚', 'Keine Bücher gefunden');
+        } else {
+          const booksHTML = booksData.map(createBookCard).join('');
+          container.innerHTML = `<div class="grid">${booksHTML}</div>`;
+        }
+      } catch (error) {
+        showError(document.getElementById('books-content'), error.message);
+      }
+    }
+
+    async function saveAuthor(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('authorName').value.trim();
+      const bio = document.getElementById('authorBio').value.trim();
+      
+      if (!name) {
+        showNotification('Name ist erforderlich', 'error');
+        return;
+      }
+      
+      try {
+        if (currentEditingAuthor) {
+          const { error } = await client
+            .from('authors')
+            .update({ name, bio: bio || null })
+            .eq('id', currentEditingAuthor.id);
+          if (error) throw error;
+          showNotification('Autor erfolgreich aktualisiert');
+        } else {
+          const { error } = await client
+            .from('authors')
+            .insert([{ name, bio: bio || null }]);
+          if (error) throw error;
+          showNotification('Autor erfolgreich hinzugefügt');
+        }
+        
+        closeModal('authorModal');
+        await loadAuthors();
+        updateStats();
+      } catch (error) {
+        showNotification('Fehler beim Speichern: ' + error.message, 'error');
+      }
+    }
+
+    async function saveBook(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('bookTitle').value.trim();
+      const author_id = document.getElementById('bookAuthor').value || null;
+      
+      if (!title) {
+        showNotification('Titel ist erforderlich', 'error');
+        return;
+      }
+      
+      try {
+        if (currentEditingBook) {
+          const { error } = await client
+            .from('books')
+            .update({ title, author_id })
+            .eq('id', currentEditingBook.id);
+          if (error) throw error;
+          showNotification('Buch erfolgreich aktualisiert');
+        } else {
+          const { error } = await client
+            .from('books')
+            .insert([{ title, author_id }]);
+          if (error) throw error;
+          showNotification('Buch erfolgreich hinzugefügt');
+        }
+        
+        closeModal('bookModal');
+        await loadBooks();
+        updateStats();
+      } catch (error) {
+        showNotification('Fehler beim Speichern: ' + error.message, 'error');
+      }
+    }
+
+    async function deleteAuthor(id) {
+      if (!confirm('Sind Sie sicher, dass Sie diesen Autor löschen möchten?')) return;
+      
+      try {
+        const { error } = await client.from('authors').delete().eq('id', id);
+        if (error) throw error;
+        
+        showNotification('Autor erfolgreich gelöscht');
+        await loadAuthors();
+        await loadBooks(); // Reload books to update author names
+        updateStats();
+      } catch (error) {
+        showNotification('Fehler beim Löschen: ' + error.message, 'error');
+      }
+    }
+
+    async function deleteBook(id) {
+      if (!confirm('Sind Sie sicher, dass Sie dieses Buch löschen möchten?')) return;
+      
+      try {
+        const { error } = await client.from('books').delete().eq('id', id);
+        if (error) throw error;
+        
+        showNotification('Buch erfolgreich gelöscht');
+        await loadBooks();
+        updateStats();
+      } catch (error) {
+        showNotification('Fehler beim Löschen: ' + error.message, 'error');
+      }
+    }
+
+    // Event Listeners
+    document.getElementById('authorForm').addEventListener('submit', saveAuthor);
+    document.getElementById('bookForm').addEventListener('submit', saveBook);
+
+    // Close modal when clicking outside
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal')) {
+        closeModal(e.target.id);
+      }
+    });
+
+    // Initialize app
     (async () => {
       try {
         await waitForSupabase();
         
         const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNkbWZjbnJpeWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NDIzODUsImV4cCI6MjA2NzAxODM4NX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
-        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const authorsContainer = document.getElementById('authors-content');
-        const booksContainer = document.getElementById('books-content');
-
-        // Autoren laden
-        const { data: authors, error: authorsError } = await client.from('authors').select('name, bio');
-        
-        if (authorsError) {
-          showError(authorsContainer, authorsError.message);
-        } else if (!authors || authors.length === 0) {
-          showEmptyState(authorsContainer, '👤', 'Keine Autoren gefunden');
-        } else {
-          const authorsHTML = authors.map(author => 
-            createCard(
-              author.name,
-              'Autor',
-              author.bio || 'Keine Biografie verfügbar'
-            )
-          ).join('');
-          authorsContainer.innerHTML = `<div class="grid">${authorsHTML}</div>`;
-        }
-
-        // Bücher laden
-        const { data: books, error: booksError } = await client.from('books').select('title, author_id');
-        
-        if (booksError) {
-          showError(booksContainer, booksError.message);
-        } else if (!books || books.length === 0) {
-          showEmptyState(booksContainer, '📚', 'Keine Bücher gefunden');
-        } else {
-          const booksHTML = books.map(book => 
-            createCard(
-              book.title,
-              'Buch',
-              book.author_id ? `Autor ID: ${book.author_id}` : 'Autor unbekannt'
-            )
-          ).join('');
-          booksContainer.innerHTML = `<div class="grid">${booksHTML}</div>`;
-        }
-
-        // Statistiken aktualisieren
-        updateStats(
-          authors ? authors.length : 0,
-          books ? books.length : 0
-        );
+        // Load initial data
+        await Promise.all([loadAuthors(), loadBooks()]);
+        updateStats();
 
       } catch (error) {
         console.error('Fehler beim Initialisieren:', error);
-        document.getElementById('authors-content').innerHTML = `<div class="error">Unerwarteter Fehler: ${error.message}</div>`;
-        document.getElementById('books-content').innerHTML = `<div class="error">Unerwarteter Fehler: ${error.message}</div>`;
+        showNotification('Fehler beim Laden der Anwendung: ' + error.message, 'error');
       }
     })();
   </script>
