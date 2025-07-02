@@ -58,7 +58,6 @@
       const authorsList = document.getElementById('authors-list');
       const booksList = document.getElementById('books-list');
 
-      // Autoren aus public.authors laden
       const { data: authors, error: authorsError } = await client
         .from('authors')
         .select('*');
@@ -78,7 +77,6 @@
         });
       }
 
-      // Bücher aus public.books laden
       const { data: books, error: booksError } = await client
         .from('books')
         .select('*');
