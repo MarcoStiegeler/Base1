@@ -3,35 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bibliothek Pro - Literaturverwaltung</title>
+  <title>Bibliothek - base2</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --secondary-gradient: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
-      --accent-gradient: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-      --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-      --success-gradient: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
-      --background-light: #ffffff;
-      --background-dark: #121212;
-      --card-light: #ffffff;
-      --card-dark: #1e1e1e;
-      --text-light: #1d1d1f;
-      --text-dark: #f5f5f7;
-      --text-secondary-light: #86868b;
-      --text-secondary-dark: #a1a1a6;
-      --border-light: rgba(0, 0, 0, 0.1);
-      --border-dark: rgba(255, 255, 255, 0.1);
-      --shadow-light: 0 12px 40px rgba(0, 0, 0, 0.15);
-      --shadow-dark: 0 12px 40px rgba(0, 0, 0, 0.5);
-      --radius: 16px;
-      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
     * {
       margin: 0;
       padding: 0;
@@ -39,136 +13,39 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: var(--background-light);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      color: var(--text-light);
-      transition: var(--transition);
-    }
-
-    body.dark {
-      background: var(--background-dark);
-      color: var(--text-dark);
+      padding: 20px;
+      color: #1d1d1f;
     }
 
     .container {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.15);
       overflow: hidden;
-      animation: fadeIn 0.8s ease-out;
+      animation: slideUp 0.8s ease-out;
     }
 
-    @keyframes fadeIn {
+    @keyframes slideUp {
       from {
         opacity: 0;
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
+        transform: translateY(0);
       }
-    }
-
-    .header {
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      padding: 1rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border-light);
-      transition: var(--transition);
-    }
-
-    .dark .header {
-      background: rgba(30, 30, 30, 0.8);
-      border-bottom: 1px solid var(--border-dark);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--text-light);
-      text-decoration: none;
-    }
-
-    .dark .logo {
-      color: var(--text-dark);
-    }
-
-    .logo-icon {
-      background: var(--primary-gradient);
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .nav {
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    .nav-link {
-      color: var(--text-light);
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.5rem 0.75rem;
-      border-radius: 8px;
-      transition: var(--transition);
-    }
-
-    .dark .nav-link {
-      color: var(--text-dark);
-    }
-
-    .nav-link:hover, .nav-link.active {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    .dark .nav-link:hover, .dark .nav-link.active {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .theme-toggle {
-      background: none;
-      border: none;
-      color: var(--text-light);
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: var(--transition);
-    }
-
-    .dark .theme-toggle {
-      color: var(--text-dark);
-    }
-
-    .theme-toggle:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    .dark .theme-toggle:hover {
-      background: rgba(255, 255, 255, 0.1);
     }
 
     .hero {
       background: linear-gradient(135deg, #000 0%, #333 100%);
       color: white;
-      padding: 80px 40px;
+      padding: 60px 40px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -186,7 +63,7 @@
     }
 
     .hero h1 {
-      font-size: 4rem;
+      font-size: 3.5rem;
       font-weight: 700;
       margin-bottom: 16px;
       position: relative;
@@ -198,157 +75,18 @@
     }
 
     .hero p {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       opacity: 0.8;
       position: relative;
       z-index: 1;
-      max-width: 700px;
-      margin: 0 auto 2rem;
-    }
-
-    .search-container {
-      max-width: 600px;
-      margin: 2rem auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 1rem 1.5rem;
-      padding-left: 3rem;
-      border-radius: 12px;
-      border: none;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      color: white;
-      font-size: 1.1rem;
-      transition: var(--transition);
-    }
-
-    .search-input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .search-input:focus {
-      outline: none;
-      background: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .stats {
-      display: flex;
-      gap: 24px;
-      margin-top: 40px;
-      justify-content: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .stat {
-      text-align: center;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 12px;
-      min-width: 150px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: white;
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 4px;
-    }
-
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-      padding: 2rem;
-    }
-
-    .dashboard-card {
-      background: var(--card-light);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      border: 1px solid var(--border-light);
-      transition: var(--transition);
-    }
-
-    .dark .dashboard-card {
-      background: var(--card-dark);
-      border: 1px solid var(--border-dark);
-    }
-
-    .dashboard-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-light);
-    }
-
-    .dark .dashboard-card:hover {
-      box-shadow: var(--shadow-dark);
-    }
-
-    .dashboard-card h3 {
-      font-size: 1.2rem;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .dashboard-card h3 i {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary-gradient);
-      border-radius: 8px;
-      color: white;
-    }
-
-    .dashboard-card p {
-      color: var(--text-secondary-light);
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
-
-    .dark .dashboard-card p {
-      color: var(--text-secondary-dark);
-    }
-
-    .dashboard-card.span-2 {
-      grid-column: span 2;
-    }
-
-    .dashboard-card.span-4 {
-      grid-column: span 4;
     }
 
     .content {
-      padding: 40px;
+      padding: 60px 40px;
     }
 
     .section {
-      margin-bottom: 60px;
+      margin-bottom: 80px;
     }
 
     .section:last-child {
@@ -361,11 +99,7 @@
       justify-content: space-between;
       margin-bottom: 32px;
       padding-bottom: 16px;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    .dark .section-header {
-      border-bottom: 1px solid var(--border-dark);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .section-title {
@@ -374,31 +108,26 @@
     }
 
     .section-icon {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       margin-right: 16px;
-      background: var(--primary-gradient);
-      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
       font-weight: bold;
-      font-size: 1.2rem;
     }
 
     .section h2 {
       font-size: 2.2rem;
       font-weight: 600;
-      color: var(--text-light);
-    }
-
-    .dark .section h2 {
-      color: var(--text-dark);
+      color: #1d1d1f;
     }
 
     .add-button {
-      background: var(--primary-gradient);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       border: none;
       padding: 12px 24px;
@@ -406,7 +135,7 @@
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       gap: 8px;
@@ -421,59 +150,21 @@
       transform: translateY(0);
     }
 
-    .filter-bar {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-select {
-      padding: 0.75rem 1rem;
-      border-radius: 10px;
-      border: 1px solid var(--border-light);
-      background: var(--card-light);
-      color: var(--text-light);
-      font-size: 0.95rem;
-      min-width: 180px;
-      transition: var(--transition);
-    }
-
-    .dark .filter-select {
-      border: 1px solid var(--border-dark);
-      background: var(--card-dark);
-      color: var(--text-dark);
-    }
-
-    .filter-select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 24px;
     }
 
     .card {
-      background: var(--card-light);
-      border-radius: var(--radius);
+      background: white;
+      border-radius: 16px;
       padding: 24px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      border: 1px solid var(--border-light);
-      transition: var(--transition);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .dark .card {
-      background: var(--card-dark);
-      border: 1px solid var(--border-dark);
     }
 
     .card::before {
@@ -483,97 +174,45 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: var(--primary-gradient);
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
       transform: scaleX(0);
       transition: transform 0.3s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: var(--shadow-light);
-    }
-
-    .dark .card:hover {
-      box-shadow: var(--shadow-dark);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
     }
 
     .card:hover::before {
       transform: scaleX(1);
     }
 
-    .card-image {
-      width: 100%;
-      height: 200px;
-      border-radius: 10px;
-      object-fit: cover;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    }
-
-    .dark .card-image {
-      background: linear-gradient(135deg, #2d3436 0%, #000000 100%);
-    }
-
     .card-title {
       font-size: 1.3rem;
       font-weight: 600;
-      color: var(--text-light);
+      color: #1d1d1f;
       margin-bottom: 8px;
       line-height: 1.4;
     }
 
-    .dark .card-title {
-      color: var(--text-dark);
-    }
-
     .card-subtitle {
       font-size: 0.95rem;
-      color: var(--text-secondary-light);
+      color: #86868b;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .dark .card-subtitle {
-      color: var(--text-secondary-dark);
     }
 
     .card-description {
       font-size: 1rem;
-      color: var(--text-light);
+      color: #515154;
       line-height: 1.6;
       margin-bottom: 16px;
-      flex-grow: 1;
-    }
-
-    .dark .card-description {
-      color: var(--text-dark);
-    }
-
-    .card-meta {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .card-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: var(--text-secondary-light);
-    }
-
-    .dark .card-meta-item {
-      color: var(--text-secondary-dark);
     }
 
     .card-actions {
       display: flex;
       gap: 8px;
-      margin-top: auto;
+      margin-top: 16px;
     }
 
     .card-action {
@@ -584,10 +223,7 @@
       border-radius: 8px;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      transition: all 0.2s ease;
     }
 
     .card-action:hover {
@@ -601,34 +237,6 @@
 
     .card-action.danger:hover {
       background: rgba(255, 107, 107, 0.2);
-    }
-
-    .card-action.secondary {
-      background: rgba(0, 0, 0, 0.05);
-      color: var(--text-light);
-    }
-
-    .dark .card-action.secondary {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-dark);
-    }
-
-    .card-action.secondary:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    .dark .card-action.secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      background: var(--accent-gradient);
-      color: white;
     }
 
     .modal {
@@ -645,7 +253,7 @@
       z-index: 1000;
       opacity: 0;
       visibility: hidden;
-      transition: var(--transition);
+      transition: all 0.3s ease;
     }
 
     .modal.active {
@@ -654,23 +262,15 @@
     }
 
     .modal-content {
-      background: var(--card-light);
+      background: white;
       border-radius: 20px;
       padding: 40px;
-      max-width: 600px;
+      max-width: 500px;
       width: 90%;
-      max-height: 90vh;
+      max-height: 80vh;
       overflow-y: auto;
       transform: scale(0.9);
-      transition: var(--transition);
-      box-shadow: var(--shadow-light);
-      border: 1px solid var(--border-light);
-    }
-
-    .dark .modal-content {
-      background: var(--card-dark);
-      box-shadow: var(--shadow-dark);
-      border: 1px solid var(--border-dark);
+      transition: transform 0.3s ease;
     }
 
     .modal.active .modal-content {
@@ -684,20 +284,12 @@
     .modal-title {
       font-size: 1.8rem;
       font-weight: 600;
-      color: var(--text-light);
+      color: #1d1d1f;
       margin-bottom: 8px;
     }
 
-    .dark .modal-title {
-      color: var(--text-dark);
-    }
-
     .modal-subtitle {
-      color: var(--text-secondary-light);
-    }
-
-    .dark .modal-subtitle {
-      color: var(--text-secondary-dark);
+      color: #86868b;
     }
 
     .form-group {
@@ -707,29 +299,18 @@
     .form-label {
       display: block;
       font-weight: 600;
-      color: var(--text-light);
+      color: #1d1d1f;
       margin-bottom: 8px;
-    }
-
-    .dark .form-label {
-      color: var(--text-dark);
     }
 
     .form-input, .form-textarea, .form-select {
       width: 100%;
       padding: 12px 16px;
-      border: 2px solid var(--border-light);
+      border: 2px solid rgba(0, 0, 0, 0.1);
       border-radius: 12px;
       font-size: 1rem;
-      transition: var(--transition);
-      background: var(--background-light);
-      color: var(--text-light);
-    }
-
-    .dark .form-input, .dark .form-textarea, .dark .form-select {
-      border: 2px solid var(--border-dark);
-      background: var(--background-dark);
-      color: var(--text-dark);
+      transition: all 0.3s ease;
+      background: white;
     }
 
     .form-input:focus, .form-textarea:focus, .form-select:focus {
@@ -741,17 +322,6 @@
     .form-textarea {
       min-height: 100px;
       resize: vertical;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .form-row .form-group {
-      flex: 1;
-      margin-bottom: 0;
     }
 
     .modal-actions {
@@ -768,11 +338,11 @@
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s ease;
     }
 
     .modal-button.primary {
-      background: var(--primary-gradient);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
 
@@ -783,20 +353,11 @@
 
     .modal-button.secondary {
       background: rgba(0, 0, 0, 0.05);
-      color: var(--text-light);
-    }
-
-    .dark .modal-button.secondary {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-dark);
+      color: #1d1d1f;
     }
 
     .modal-button.secondary:hover {
       background: rgba(0, 0, 0, 0.1);
-    }
-
-    .dark .modal-button.secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
     }
 
     .loading {
@@ -804,11 +365,7 @@
       align-items: center;
       justify-content: center;
       padding: 60px;
-      color: var(--text-secondary-light);
-    }
-
-    .dark .loading {
-      color: var(--text-secondary-dark);
+      color: #86868b;
     }
 
     .spinner {
@@ -821,18 +378,13 @@
       margin-right: 16px;
     }
 
-    .dark .spinner {
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      border-top: 3px solid #667eea;
-    }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
     .error {
-      background: var(--danger-gradient);
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
       color: white;
       padding: 20px;
       border-radius: 12px;
@@ -841,7 +393,7 @@
     }
 
     .success {
-      background: var(--success-gradient);
+      background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
       color: white;
       padding: 20px;
       border-radius: 12px;
@@ -853,11 +405,7 @@
     .empty-state {
       text-align: center;
       padding: 60px 20px;
-      color: var(--text-secondary-light);
-    }
-
-    .dark .empty-state {
-      color: var(--text-secondary-dark);
+      color: #86868b;
     }
 
     .empty-state-icon {
@@ -866,351 +414,32 @@
       opacity: 0.5;
     }
 
-    .tabs {
+    .stats {
       display: flex;
-      border-bottom: 1px solid var(--border-light);
-      margin-bottom: 2rem;
+      gap: 24px;
+      margin-top: 40px;
+      justify-content: center;
     }
 
-    .dark .tabs {
-      border-bottom: 1px solid var(--border-dark);
+    .stat {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      min-width: 120px;
     }
 
-    .tab {
-      padding: 1rem 1.5rem;
-      font-weight: 500;
-      color: var(--text-secondary-light);
-      cursor: pointer;
-      transition: var(--transition);
-      border-bottom: 2px solid transparent;
-    }
-
-    .dark .tab {
-      color: var(--text-secondary-dark);
-    }
-
-    .tab:hover {
-      color: var(--text-light);
-    }
-
-    .dark .tab:hover {
-      color: var(--text-dark);
-    }
-
-    .tab.active {
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
       color: #667eea;
-      border-bottom: 2px solid #667eea;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
       display: block;
     }
 
-    .chart-container {
-      height: 300px;
-      margin-bottom: 2rem;
-    }
-
-    .footer {
-      background: var(--background-light);
-      border-top: 1px solid var(--border-light);
-      padding: 2rem;
-      text-align: center;
-      color: var(--text-secondary-light);
-      transition: var(--transition);
-    }
-
-    .dark .footer {
-      background: var(--background-dark);
-      border-top: 1px solid var(--border-dark);
-      color: var(--text-secondary-dark);
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .footer-link {
-      color: var(--text-secondary-light);
-      text-decoration: none;
-      transition: var(--transition);
-    }
-
-    .dark .footer-link {
-      color: var(--text-secondary-dark);
-    }
-
-    .footer-link:hover {
-      color: #667eea;
-    }
-
-    .collection-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .collection-card {
-      background: var(--card-light);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      border: 1px solid var(--border-light);
-      transition: var(--transition);
-      cursor: pointer;
-    }
-
-    .dark .collection-card {
-      background: var(--card-dark);
-      border: 1px solid var(--border-dark);
-    }
-
-    .collection-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-light);
-    }
-
-    .dark .collection-card:hover {
-      box-shadow: var(--shadow-dark);
-    }
-
-    .collection-card h3 {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .collection-card p {
-      color: var(--text-secondary-light);
+    .stat-label {
       font-size: 0.9rem;
-      margin-bottom: 1rem;
-    }
-
-    .dark .collection-card p {
-      color: var(--text-secondary-dark);
-    }
-
-    .collection-count {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      color: #667eea;
-    }
-
-    .book-detail {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 2rem;
-    }
-
-    .book-cover {
-      width: 100%;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-light);
-    }
-
-    .dark .book-cover {
-      box-shadow: var(--shadow-dark);
-    }
-
-    .book-info h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .book-info-meta {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .book-info-meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text-secondary-light);
-    }
-
-    .dark .book-info-meta-item {
-      color: var(--text-secondary-dark);
-    }
-
-    .book-description {
-      line-height: 1.8;
-      margin-bottom: 2rem;
-    }
-
-    .book-actions {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .book-action {
-      padding: 0.75rem 1.5rem;
-      border-radius: 10px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .book-action.primary {
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-    }
-
-    .book-action.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    }
-
-    .book-action.secondary {
-      background: rgba(0, 0, 0, 0.05);
-      color: var(--text-light);
-      border: none;
-    }
-
-    .dark .book-action.secondary {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-dark);
-    }
-
-    .book-action.secondary:hover {
-      background: rgba(0, 0, 0, 0.1);
-    }
-
-    .dark .book-action.secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .file-upload {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem;
-      border: 2px dashed var(--border-light);
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .dark .file-upload {
-      border: 2px dashed var(--border-dark);
-    }
-
-    .file-upload:hover {
-      border-color: #667eea;
-    }
-
-    .file-upload input {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .file-upload i {
-      font-size: 2rem;
-      color: var(--text-secondary-light);
-      margin-bottom: 1rem;
-    }
-
-    .dark .file-upload i {
-      color: var(--text-secondary-dark);
-    }
-
-    .file-upload p {
-      color: var(--text-secondary-light);
-    }
-
-    .dark .file-upload p {
-      color: var(--text-secondary-dark);
-    }
-
-    .file-preview {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: var(--radius);
-      margin-bottom: 1rem;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 2rem;
-    }
-
-    .pagination-item {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      background: var(--card-light);
-      color: var(--text-light);
-      border: 1px solid var(--border-light);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .dark .pagination-item {
-      background: var(--card-dark);
-      color: var(--text-dark);
-      border: 1px solid var(--border-dark);
-    }
-
-    .pagination-item:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    .dark .pagination-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .pagination-item.active {
-      background: var(--primary-gradient);
-      color: white;
-      border: none;
-    }
-
-    @media (max-width: 1200px) {
-      .dashboard {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 992px) {
-      .dashboard {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .book-detail {
-        grid-template-columns: 1fr;
-      }
-
-      .book-cover {
-        max-width: 300px;
-        margin: 0 auto;
-      }
+      color: #86868b;
+      margin-top: 4px;
     }
 
     @media (max-width: 768px) {
@@ -1223,11 +452,7 @@
       }
 
       .content {
-        padding: 20px;
-      }
-
-      .dashboard {
-        grid-template-columns: 1fr;
+        padding: 40px 20px;
       }
 
       .grid {
@@ -1242,72 +467,21 @@
       .section-header {
         flex-direction: column;
         gap: 16px;
-        align-items: flex-start;
+        align-items: stretch;
       }
 
       .modal-content {
         padding: 24px;
       }
-
-      .form-row {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .header {
-        padding: 1rem;
-      }
-
-      .nav {
-        display: none;
-      }
-
-      .mobile-menu-toggle {
-        display: block;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-
-      .hero p {
-        font-size: 1rem;
-      }
-
-      .section h2 {
-        font-size: 1.8rem;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <a href="#" class="logo">
-      <div class="logo-icon"><i class="fas fa-book"></i></div>
-      <span>Bibliothek Pro</span>
-    </a>
-    <div class="nav">
-      <a href="#" class="nav-link active">Dashboard</a>
-      <a href="#" class="nav-link" onclick="showTab('authors')">Autoren</a>
-      <a href="#" class="nav-link" onclick="showTab('books')">Bücher</a>
-      <a href="#" class="nav-link" onclick="showTab('collections')">Sammlungen</a>
-    </div>
-    <button class="theme-toggle" onclick="toggleTheme()">
-      <i class="fas fa-moon"></i>
-    </button>
-  </div>
-
   <div class="container">
     <div class="hero">
-      <h1>Bibliothek Pro</h1>
-      <p>Verwalten Sie Ihre Sammlung von Autoren und Büchern mit dieser professionellen Bibliotheksverwaltung</p>
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-input" placeholder="Suchen Sie nach Büchern, Autoren oder Genres..." id="global-search">
-      </div>
-      <div class="stats" id="stats">
+      <h1>Bibliothek</h1>
+      <p>Verwalten Sie Ihre Sammlung von Autoren und Büchern</p>
+      <div class="stats" id="stats" style="display: none;">
         <div class="stat">
           <span class="stat-number" id="authors-count">0</span>
           <span class="stat-label">Autoren</span>
@@ -1316,166 +490,47 @@
           <span class="stat-number" id="books-count">0</span>
           <span class="stat-label">Bücher</span>
         </div>
-        <div class="stat">
-          <span class="stat-number" id="genres-count">0</span>
-          <span class="stat-label">Genres</span>
-        </div>
-        <div class="stat">
-          <span class="stat-number" id="collections-count">0</span>
-          <span class="stat-label">Sammlungen</span>
-        </div>
       </div>
     </div>
 
     <div class="content">
-      <div id="dashboard-tab" class="tab-content active">
-        <div class="dashboard">
-          <div class="dashboard-card">
-            <h3><i class="fas fa-book"></i> Neueste Bücher</h3>
-            <p>Die zuletzt hinzugefügten Bücher in Ihrer Bibliothek.</p>
-            <div id="latest-books">
-              <div class="loading">
-                <div class="spinner"></div>
-                <span>Lade Bücher...</span>
-              </div>
-            </div>
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon">A</div>
+            <h2>Autoren</h2>
           </div>
-          <div class="dashboard-card">
-            <h3><i class="fas fa-user"></i> Neueste Autoren</h3>
-            <p>Die zuletzt hinzugefügten Autoren in Ihrer Bibliothek.</p>
-            <div id="latest-authors">
-              <div class="loading">
-                <div class="spinner"></div>
-                <span>Lade Autoren...</span>
-              </div>
-            </div>
-          </div>
-          <div class="dashboard-card">
-            <h3><i class="fas fa-layer-group"></i> Sammlungen</h3>
-            <p>Ihre persönlichen Buchsammlungen und Listen.</p>
-            <div id="collections-preview">
-              <div class="loading">
-                <div class="spinner"></div>
-                <span>Lade Sammlungen...</span>
-              </div>
-            </div>
-          </div>
-          <div class="dashboard-card span-2">
-            <h3><i class="fas fa-chart-pie"></i> Statistiken</h3>
-            <p>Übersicht über Ihre Bibliothek nach Genres und Autoren.</p>
-            <div class="chart-container" id="genres-chart">
-              <!-- Chart will be rendered here -->
-            </div>
+          <button class="add-button" onclick="openAuthorModal()">
+            <span>+</span>
+            <span>Autor hinzufügen</span>
+          </button>
+        </div>
+        <div id="authors-content">
+          <div class="loading">
+            <div class="spinner"></div>
+            <span>Lade Autoren...</span>
           </div>
         </div>
       </div>
 
-      <div id="authors-tab" class="tab-content">
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">
-              <div class="section-icon">A</div>
-              <h2>Autoren</h2>
-            </div>
-            <button class="add-button" onclick="openAuthorModal()">
-              <i class="fas fa-plus"></i>
-              <span>Autor hinzufügen</span>
-            </button>
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <div class="section-icon">B</div>
+            <h2>Bücher</h2>
           </div>
-
-          <div class="filter-bar">
-            <select class="filter-select" id="nationality-filter">
-              <option value="">Alle Nationalitäten</option>
-              <!-- Will be populated dynamically -->
-            </select>
-            <select class="filter-select" id="author-sort">
-              <option value="name">Name (A-Z)</option>
-              <option value="name-desc">Name (Z-A)</option>
-              <option value="books">Anzahl der Bücher</option>
-              <option value="created">Neueste zuerst</option>
-            </select>
-          </div>
-
-          <div id="authors-content">
-            <div class="loading">
-              <div class="spinner"></div>
-              <span>Lade Autoren...</span>
-            </div>
+          <button class="add-button" onclick="openBookModal()">
+            <span>+</span>
+            <span>Buch hinzufügen</span>
+          </button>
+        </div>
+        <div id="books-content">
+          <div class="loading">
+            <div class="spinner"></div>
+            <span>Lade Bücher...</span>
           </div>
         </div>
       </div>
-
-      <div id="books-tab" class="tab-content">
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">
-              <div class="section-icon">B</div>
-              <h2>Bücher</h2>
-            </div>
-            <button class="add-button" onclick="openBookModal()">
-              <i class="fas fa-plus"></i>
-              <span>Buch hinzufügen</span>
-            </button>
-          </div>
-
-          <div class="filter-bar">
-            <select class="filter-select" id="author-filter">
-              <option value="">Alle Autoren</option>
-              <!-- Will be populated dynamically -->
-            </select>
-            <select class="filter-select" id="genre-filter">
-              <option value="">Alle Genres</option>
-              <!-- Will be populated dynamically -->
-            </select>
-            <select class="filter-select" id="book-sort">
-              <option value="title">Titel (A-Z)</option>
-              <option value="title-desc">Titel (Z-A)</option>
-              <option value="author">Autor</option>
-              <option value="published">Erscheinungsdatum</option>
-              <option value="created">Hinzugefügt am</option>
-            </select>
-          </div>
-
-          <div id="books-content">
-            <div class="loading">
-              <div class="spinner"></div>
-              <span>Lade Bücher...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="collections-tab" class="tab-content">
-        <div class="section">
-          <div class="section-header">
-            <div class="section-title">
-              <div class="section-icon"><i class="fas fa-layer-group"></i></div>
-              <h2>Sammlungen</h2>
-            </div>
-            <button class="add-button" onclick="openCollectionModal()">
-              <i class="fas fa-plus"></i>
-              <span>Sammlung hinzufügen</span>
-            </button>
-          </div>
-
-          <div id="collections-content">
-            <div class="loading">
-              <div class="spinner"></div>
-              <span>Lade Sammlungen...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer">
-      <div class="footer-links">
-        <a href="#" class="footer-link">Über uns</a>
-        <a href="#" class="footer-link">Datenschutz</a>
-        <a href="#" class="footer-link">Impressum</a>
-        <a href="#" class="footer-link">Kontakt</a>
-      </div>
-      <p>© 2023 Bibliothek Pro. Alle Rechte vorbehalten.</p>
     </div>
   </div>
 
@@ -1488,31 +543,12 @@
       </div>
       <form id="author-form">
         <div class="form-group">
-          <label class="form-label" for="author-name">Name* </label>
+          <label class="form-label" for="author-name">Name *</label>
           <input type="text" id="author-name" class="form-input" required placeholder="Name des Autors">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="author-birth-date">Geburtsdatum</label>
-            <input type="date" id="author-birth-date" class="form-input" placeholder="Geburtsdatum">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="author-nationality">Nationalität</label>
-            <input type="text" id="author-nationality" class="form-input" placeholder="Nationalität">
-          </div>
         </div>
         <div class="form-group">
           <label class="form-label" for="author-bio">Biografie</label>
           <textarea id="author-bio" class="form-textarea" placeholder="Kurze Biografie des Autors (optional)"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="author-photo">Foto</label>
-          <div class="file-upload">
-            <input type="file" id="author-photo" accept="image/*">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Klicken Sie hier, um ein Foto hochzuladen</p>
-          </div>
-          <img id="author-photo-preview" class="file-preview" style="display: none;">
         </div>
         <div class="modal-actions">
           <button type="button" class="modal-button secondary" onclick="closeAuthorModal()">Abbrechen</button>
@@ -1534,55 +570,11 @@
           <label class="form-label" for="book-title">Titel *</label>
           <input type="text" id="book-title" class="form-input" required placeholder="Titel des Buches">
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="book-author">Autor</label>
-            <select id="book-author" class="form-select">
-              <option value="">Autor auswählen</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="book-genre">Genre</label>
-            <select id="book-genre" class="form-select">
-              <option value="">Genre auswählen</option>
-              <option value="Roman">Roman</option>
-              <option value="Sachbuch">Sachbuch</option>
-              <option value="Biografie">Biografie</option>
-              <option value="Krimi">Krimi</option>
-              <option value="Science Fiction">Science Fiction</option>
-              <option value="Fantasy">Fantasy</option>
-              <option value="Thriller">Thriller</option>
-              <option value="Kinderbuch">Kinderbuch</option>
-              <option value="Jugendbuch">Jugendbuch</option>
-              <option value="Lyrik">Lyrik</option>
-              <option value="Drama">Drama</option>
-              <option value="Klassiker">Klassiker</option>
-              <option value="Andere">Andere</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="book-publication-date">Erscheinungsdatum</label>
-            <input type="date" id="book-publication-date" class="form-input">
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="book-pages">Seitenzahl</label>
-            <input type="number" id="book-pages" class="form-input" min="1" placeholder="Anzahl der Seiten">
-          </div>
-        </div>
         <div class="form-group">
-          <label class="form-label" for="book-description">Beschreibung</label>
-          <textarea id="book-description" class="form-textarea" placeholder="Kurze Beschreibung des Buches"></textarea>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="book-cover">Buchcover</label>
-          <div class="file-upload">
-            <input type="file" id="book-cover" accept="image/*">
-            <i class="fas fa-cloud-upload-alt"></i>
-            <p>Klicken Sie hier, um ein Buchcover hochzuladen</p>
-          </div>
-          <img id="book-cover-preview" class="file-preview" style="display: none;">
+          <label class="form-label" for="book-author">Autor</label>
+          <select id="book-author" class="form-select">
+            <option value="">Autor auswählen (optional)</option>
+          </select>
         </div>
         <div class="modal-actions">
           <button type="button" class="modal-button secondary" onclick="closeBookModal()">Abbrechen</button>
@@ -1592,119 +584,10 @@
     </div>
   </div>
 
-  <!-- Collection Modal -->
-  <div id="collection-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Neue Sammlung erstellen</h3>
-        <p class="modal-subtitle">Erstellen Sie eine neue Sammlung für Ihre Bücher</p>
-      </div>
-      <form id="collection-form">
-        <div class="form-group">
-          <label class="form-label" for="collection-name">Name *</label>
-          <input type="text" id="collection-name" class="form-input" required placeholder="Name der Sammlung">
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="collection-description">Beschreibung</label>
-          <textarea id="collection-description" class="form-textarea" placeholder="Beschreibung der Sammlung"></textarea>
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="modal-button secondary" onclick="closeCollectionModal()">Abbrechen</button>
-          <button type="submit" class="modal-button primary">Sammlung erstellen</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Book Detail Modal -->
-  <div id="book-detail-modal" class="modal">
-    <div class="modal-content" style="max-width: 900px;">
-      <div id="book-detail-content">
-        <!-- Content will be loaded dynamically -->
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="modal-button secondary" onclick="closeBookDetailModal()">Schließen</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Author Detail Modal -->
-  <div id="author-detail-modal" class="modal">
-    <div class="modal-content" style="max-width: 900px;">
-      <div id="author-detail-content">
-        <!-- Content will be loaded dynamically -->
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="modal-button secondary" onclick="closeAuthorDetailModal()">Schließen</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     let supabaseClient;
     let authorsData = [];
     let booksData = [];
-    let collectionsData = [];
-    let genresData = [];
-    let currentTheme = localStorage.getItem('theme') || 'light';
-    let genreChart = null;
-
-    // Apply theme on load
-    if (currentTheme === 'dark') {
-      document.body.classList.add('dark');
-      document.querySelector('.theme-toggle i').classList.remove('fa-moon');
-      document.querySelector('.theme-toggle i').classList.add('fa-sun');
-    }
-
-    function toggleTheme() {
-      if (currentTheme === 'light') {
-        document.body.classList.add('dark');
-        document.querySelector('.theme-toggle i').classList.remove('fa-moon');
-        document.querySelector('.theme-toggle i').classList.add('fa-sun');
-        currentTheme = 'dark';
-      } else {
-        document.body.classList.remove('dark');
-        document.querySelector('.theme-toggle i').classList.remove('fa-sun');
-        document.querySelector('.theme-toggle i').classList.add('fa-moon');
-        currentTheme = 'light';
-      }
-      localStorage.setItem('theme', currentTheme);
-      
-      // Update chart if it exists
-      if (genreChart) {
-        updateGenreChart();
-      }
-    }
-
-    function showTab(tabName) {
-      // Hide all tab contents
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      
-      // Show selected tab content
-      document.getElementById(`${tabName}-tab`).classList.add('active');
-      
-      // Update active nav link
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-      });
-      
-      // Find the link that triggered this and make it active
-      const links = document.querySelectorAll('.nav-link');
-      for (let i = 0; i < links.length; i++) {
-        if (links[i].textContent.toLowerCase().includes(tabName.toLowerCase())) {
-          links[i].classList.add('active');
-          break;
-        }
-      }
-      
-      // If it's the dashboard tab, make the first link active
-      if (tabName === 'dashboard') {
-        links[0].classList.add('active');
-      }
-    }
 
     async function waitForSupabase() {
       return new Promise(resolve => {
@@ -1720,35 +603,21 @@
       });
     }
 
-    function createCard(title, subtitle, description, image = null, meta = [], actions = []) {
-      const imageHTML = image ? `<img src="${image}" alt="${title}" class="card-image">` : '';
-      
-      const metaHTML = meta.length > 0 ? 
-        `<div class="card-meta">
-          ${meta.map(item => `
-            <div class="card-meta-item">
-              <i class="fas fa-${item.icon}"></i>
-              <span>${item.text}</span>
-            </div>
-          `).join('')}
-        </div>` : '';
-      
-      const actionsHTML = actions.length > 0 ? 
-        `<div class="card-actions">
+    function createCard(title, subtitle, description, actions = []) {
+      const actionsHTML = actions.length > 0 ? `
+        <div class="card-actions">
           ${actions.map(action => `
             <button class="card-action ${action.class || ''}" onclick="${action.onclick}">
-              ${action.icon ? `<i class="fas fa-${action.icon}"></i>` : ''}
               ${action.text}
             </button>
           `).join('')}
-        </div>` : '';
+        </div>
+      ` : '';
 
       return `
         <div class="card">
-          ${imageHTML}
           <div class="card-title">${title}</div>
           ${subtitle ? `<div class="card-subtitle">${subtitle}</div>` : ''}
-          ${metaHTML}
           ${description ? `<div class="card-description">${description}</div>` : ''}
           ${actionsHTML}
         </div>
@@ -1756,18 +625,14 @@
     }
 
     function showError(container, message) {
-      container.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Fehler: ${message}</div>`;
+      container.innerHTML = `<div class="error">⚠️ Fehler: ${message}</div>`;
     }
 
     function showSuccess(container, message) {
-      const successDiv = document.createElement('div');
-      successDiv.className = 'success';
-      successDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-      container.insertBefore(successDiv, container.firstChild);
-      
+      container.innerHTML = `<div class="success">✅ ${message}</div>`;
       setTimeout(() => {
-        if (successDiv.parentNode === container) {
-          successDiv.remove();
+        if (container.querySelector('.success')) {
+          container.querySelector('.success').remove();
         }
       }, 3000);
     }
@@ -1775,7 +640,7 @@
     function showEmptyState(container, icon, message) {
       container.innerHTML = `
         <div class="empty-state">
-          <div class="empty-state-icon"><i class="fas fa-${icon}"></i></div>
+          <div class="empty-state-icon">${icon}</div>
           <div>${message}</div>
         </div>
       `;
@@ -1784,15 +649,7 @@
     function updateStats() {
       document.getElementById('authors-count').textContent = authorsData.length;
       document.getElementById('books-count').textContent = booksData.length;
-      
-      // Count unique genres
-      const uniqueGenres = new Set();
-      booksData.forEach(book => {
-        if (book.genre) uniqueGenres.add(book.genre);
-      });
-      document.getElementById('genres-count').textContent = uniqueGenres.size;
-      
-      document.getElementById('collections-count').textContent = collectionsData.length;
+      document.getElementById('stats').style.display = 'flex';
     }
 
     function openAuthorModal() {
@@ -1803,7 +660,6 @@
     function closeAuthorModal() {
       document.getElementById('author-modal').classList.remove('active');
       document.getElementById('author-form').reset();
-      document.getElementById('author-photo-preview').style.display = 'none';
     }
 
     function openBookModal() {
@@ -1815,207 +671,13 @@
     function closeBookModal() {
       document.getElementById('book-modal').classList.remove('active');
       document.getElementById('book-form').reset();
-      document.getElementById('book-cover-preview').style.display = 'none';
-    }
-
-    function openCollectionModal() {
-      document.getElementById('collection-modal').classList.add('active');
-      document.getElementById('collection-name').focus();
-    }
-
-    function closeCollectionModal() {
-      document.getElementById('collection-modal').classList.remove('active');
-      document.getElementById('collection-form').reset();
-    }
-
-    function openBookDetailModal(bookId) {
-      const book = booksData.find(b => b.id === bookId);
-      if (!book) return;
-      
-      const author = authorsData.find(a => a.id === book.author_id);
-      const authorName = author ? author.name : 'Unbekannter Autor';
-      
-      let coverImage = book.cover_image || 'https://via.placeholder.com/300x450?text=Kein+Cover';
-      
-      const content = `
-        <div class="book-detail">
-          <div>
-            <img src="${coverImage}" alt="${book.title}" class="book-cover">
-          </div>
-          <div class="book-info">
-            <h1>${book.title}</h1>
-            <div class="book-info-meta">
-              <div class="book-info-meta-item">
-                <i class="fas fa-user"></i>
-                <span>${authorName}</span>
-              </div>
-              ${book.genre ? `
-                <div class="book-info-meta-item">
-                  <i class="fas fa-tag"></i>
-                  <span>${book.genre}</span>
-                </div>
-              ` : ''}
-              ${book.publication_date ? `
-                <div class="book-info-meta-item">
-                  <i class="fas fa-calendar"></i>
-                  <span>${new Date(book.publication_date).toLocaleDateString()}</span>
-                </div>
-              ` : ''}
-              ${book.page_count ? `
-                <div class="book-info-meta-item">
-                  <i class="fas fa-file-alt"></i>
-                  <span>${book.page_count} Seiten</span>
-                </div>
-              ` : ''}
-            </div>
-            <div class="book-description">
-              ${book.description || 'Keine Beschreibung verfügbar.'}
-            </div>
-            <div class="book-actions">
-              <button class="book-action primary">
-                <i class="fas fa-plus"></i>
-                Zur Sammlung hinzufügen
-              </button>
-              <button class="book-action secondary" onclick="editBook(${book.id})">
-                <i class="fas fa-edit"></i>
-                Bearbeiten
-              </button>
-              <button class="book-action secondary danger" onclick="deleteBook(${book.id}, '${book.title.replace(/'/g, "\\'")}')">
-                <i class="fas fa-trash"></i>
-                Löschen
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-      
-      document.getElementById('book-detail-content').innerHTML = content;
-      document.getElementById('book-detail-modal').classList.add('active');
-    }
-
-    function closeBookDetailModal() {
-      document.getElementById('book-detail-modal').classList.remove('active');
-    }
-
-    function openAuthorDetailModal(authorId) {
-      const author = authorsData.find(a => a.id === authorId);
-      if (!author) return;
-      
-      // Find books by this author
-      const authorBooks = booksData.filter(book => book.author_id === author.id);
-      
-      let photoUrl = author.photo || 'https://via.placeholder.com/300x300?text=Kein+Foto';
-      
-      const content = `
-        <div class="book-detail">
-          <div>
-            <img src="${photoUrl}" alt="${author.name}" class="book-cover" style="border-radius: 50%;">
-          </div>
-          <div class="book-info">
-            <h1>${author.name}</h1>
-            <div class="book-info-meta">
-              ${author.nationality ? `
-                <div class="book-info-meta-item">
-                  <i class="fas fa-globe"></i>
-                  <span>${author.nationality}</span>
-                </div>
-              ` : ''}
-              ${author.birth_date ? `
-                <div class="book-info-meta-item">
-                  <i class="fas fa-birthday-cake"></i>
-                  <span>${new Date(author.birth_date).toLocaleDateString()}</span>
-                </div>
-              ` : ''}
-              <div class="book-info-meta-item">
-                <i class="fas fa-book"></i>
-                <span>${authorBooks.length} Bücher</span>
-              </div>
-            </div>
-            <div class="book-description">
-              ${author.bio || 'Keine Biografie verfügbar.'}
-            </div>
-            <div class="book-actions">
-              <button class="book-action secondary" onclick="editAuthor(${author.id})">
-                <i class="fas fa-edit"></i>
-                Bearbeiten
-              </button>
-              <button class="book-action secondary danger" onclick="deleteAuthor(${author.id}, '${author.name.replace(/'/g, "\\'")}')">
-                <i class="fas fa-trash"></i>
-                Löschen
-              </button>
-            </div>
-            
-            ${authorBooks.length > 0 ? `
-              <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Bücher von ${author.name}</h3>
-              <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
-                ${authorBooks.map(book => {
-                  let coverImage = book.cover_image || 'https://via.placeholder.com/200x300?text=Kein+Cover';
-                  return `
-                    <div class="card" onclick="openBookDetailModal(${book.id})">
-                      <img src="${coverImage}" alt="${book.title}" class="card-image" style="height: 150px;">
-                      <div class="card-title" style="font-size: 1rem;">${book.title}</div>
-                      ${book.genre ? `<div class="card-subtitle">${book.genre}</div>` : ''}
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            ` : ''}
-          </div>
-        </div>
-      `;
-      
-      document.getElementById('author-detail-content').innerHTML = content;
-      document.getElementById('author-detail-modal').classList.add('active');
-    }
-
-    function closeAuthorDetailModal() {
-      document.getElementById('author-detail-modal').classList.remove('active');
     }
 
     function populateAuthorSelect() {
       const select = document.getElementById('book-author');
-      select.innerHTML = '<option value="">Autor auswählen</option>';
+      select.innerHTML = '<option value="">Autor auswählen (optional)</option>';
       authorsData.forEach(author => {
         select.innerHTML += `<option value="${author.id}">${author.name}</option>`;
-      });
-    }
-
-    function populateFilters() {
-      // Author filter for books
-      const authorFilter = document.getElementById('author-filter');
-      authorFilter.innerHTML = '<option value="">Alle Autoren</option>';
-      authorsData.forEach(author => {
-        authorFilter.innerHTML += `<option value="${author.id}">${author.name}</option>`;
-      });
-      
-      // Genre filter
-      const genreFilter = document.getElementById('genre-filter');
-      genreFilter.innerHTML = '<option value="">Alle Genres</option>';
-      
-      // Get unique genres
-      const uniqueGenres = new Set();
-      booksData.forEach(book => {
-        if (book.genre) uniqueGenres.add(book.genre);
-      });
-      
-      // Add genres to filter
-      uniqueGenres.forEach(genre => {
-        genreFilter.innerHTML += `<option value="${genre}">${genre}</option>`;
-      });
-      
-      // Nationality filter
-      const nationalityFilter = document.getElementById('nationality-filter');
-      nationalityFilter.innerHTML = '<option value="">Alle Nationalitäten</option>';
-      
-      // Get unique nationalities
-      const uniqueNationalities = new Set();
-      authorsData.forEach(author => {
-        if (author.nationality) uniqueNationalities.add(author.nationality);
-      });
-      
-      // Add nationalities to filter
-      uniqueNationalities.forEach(nationality => {
-        nationalityFilter.innerHTML += `<option value="${nationality}">${nationality}</option>`;
       });
     }
 
@@ -2030,7 +692,6 @@
         
         await loadAuthors();
         await loadBooks(); // Refresh books as well since author relationships might change
-        showSuccess(document.getElementById('authors-content'), 'Autor erfolgreich gelöscht!');
       } catch (error) {
         alert('Fehler beim Löschen des Autors: ' + error.message);
       }
@@ -2046,77 +707,16 @@
         if (error) throw error;
         
         await loadBooks();
-        closeBookDetailModal();
-        showSuccess(document.getElementById('books-content'), 'Buch erfolgreich gelöscht!');
       } catch (error) {
         alert('Fehler beim Löschen des Buches: ' + error.message);
       }
     }
-
-    async function deleteCollection(collectionId, collectionName) {
-      if (!confirm(`Möchten Sie die Sammlung "${collectionName}" wirklich löschen?`)) {
-        return;
-      }
-
-      try {
-        // First delete all collection_books entries
-        const { error: relationError } = await supabaseClient
-          .from('collection_books')
-          .delete()
-          .eq('collection_id', collectionId);
-          
-        if (relationError) throw relationError;
-        
-        // Then delete the collection
-        const { error } = await supabaseClient
-          .from('collections')
-          .delete()
-          .eq('id', collectionId);
-          
-        if (error) throw error;
-        
-        await loadCollections();
-        showSuccess(document.getElementById('collections-content'), 'Sammlung erfolgreich gelöscht!');
-      } catch (error) {
-        alert('Fehler beim Löschen der Sammlung: ' + error.message);
-      }
-    }
-
-    // File handling
-    document.getElementById('author-photo').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const preview = document.getElementById('author-photo-preview');
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    });
-
-    document.getElementById('book-cover').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const preview = document.getElementById('book-cover-preview');
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    });
 
     async function addAuthor(event) {
       event.preventDefault();
       
       const name = document.getElementById('author-name').value.trim();
       const bio = document.getElementById('author-bio').value.trim();
-      const birthDate = document.getElementById('author-birth-date').value;
-      const nationality = document.getElementById('author-nationality').value.trim();
-      const photoFile = document.getElementById('author-photo').files[0];
 
       if (!name) {
         alert('Bitte geben Sie einen Namen ein.');
@@ -2124,47 +724,22 @@
       }
 
       try {
-        let photoUrl = null;
-        
-        // If there's a photo, upload it first
-        if (photoFile) {
-          const fileExt = photoFile.name.split('.').pop();
-          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-          const filePath = `author-photos/${fileName}`;
-          
-          const { data: uploadData, error: uploadError } = await supabaseClient
-            .storage
-            .from('library-media')
-            .upload(filePath, photoFile);
-            
-          if (uploadError) throw uploadError;
-          
-          // Get the public URL
-          const { data: { publicUrl } } = supabaseClient
-            .storage
-            .from('library-media')
-            .getPublicUrl(filePath);
-            
-          photoUrl = publicUrl;
-        }
-        
         const { error } = await supabaseClient
           .from('authors')
-          .insert([{ 
-            name, 
-            bio: bio || null,
-            birth_date: birthDate || null,
-            nationality: nationality || null,
-            photo: photoUrl
-          }]);
-          
+          .insert([{ name, bio: bio || null }]);
+        
         if (error) throw error;
         
         closeAuthorModal();
         await loadAuthors();
         
         const container = document.getElementById('authors-content');
-        showSuccess(container, 'Autor erfolgreich hinzugefügt!');
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success';
+        successDiv.innerHTML = '✅ Autor erfolgreich hinzugefügt!';
+        container.insertBefore(successDiv, container.firstChild);
+        
+        setTimeout(() => successDiv.remove(), 3000);
         
       } catch (error) {
         alert('Fehler beim Hinzufügen des Autors: ' + error.message);
@@ -2176,11 +751,6 @@
       
       const title = document.getElementById('book-title').value.trim();
       const authorId = document.getElementById('book-author').value || null;
-      const genre = document.getElementById('book-genre').value || null;
-      const publicationDate = document.getElementById('book-publication-date').value;
-      const pageCount = document.getElementById('book-pages').value;
-      const description = document.getElementById('book-description').value.trim();
-      const coverFile = document.getElementById('book-cover').files[0];
 
       if (!title) {
         alert('Bitte geben Sie einen Titel ein.');
@@ -2188,84 +758,25 @@
       }
 
       try {
-        let coverUrl = null;
-        
-        // If there's a cover, upload it first
-        if (coverFile) {
-          const fileExt = coverFile.name.split('.').pop();
-          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
-          const filePath = `book-covers/${fileName}`;
-          
-          const { data: uploadData, error: uploadError } = await supabaseClient
-            .storage
-            .from('library-media')
-            .upload(filePath, coverFile);
-            
-          if (uploadError) throw uploadError;
-          
-          // Get the public URL
-          const { data: { publicUrl } } = supabaseClient
-            .storage
-            .from('library-media')
-            .getPublicUrl(filePath);
-            
-          coverUrl = publicUrl;
-        }
-        
         const { error } = await supabaseClient
           .from('books')
-          .insert([{ 
-            title, 
-            author_id: authorId,
-            genre,
-            publication_date: publicationDate || null,
-            page_count: pageCount || null,
-            description: description || null,
-            cover_image: coverUrl
-          }]);
-          
+          .insert([{ title, author_id: authorId }]);
+        
         if (error) throw error;
         
         closeBookModal();
         await loadBooks();
         
         const container = document.getElementById('books-content');
-        showSuccess(container, 'Buch erfolgreich hinzugefügt!');
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success';
+        successDiv.innerHTML = '✅ Buch erfolgreich hinzugefügt!';
+        container.insertBefore(successDiv, container.firstChild);
+        
+        setTimeout(() => successDiv.remove(), 3000);
         
       } catch (error) {
         alert('Fehler beim Hinzufügen des Buches: ' + error.message);
-      }
-    }
-
-    async function addCollection(event) {
-      event.preventDefault();
-      
-      const name = document.getElementById('collection-name').value.trim();
-      const description = document.getElementById('collection-description').value.trim();
-
-      if (!name) {
-        alert('Bitte geben Sie einen Namen ein.');
-        return;
-      }
-
-      try {
-        const { error } = await supabaseClient
-          .from('collections')
-          .insert([{ 
-            name, 
-            description: description || null
-          }]);
-          
-        if (error) throw error;
-        
-        closeCollectionModal();
-        await loadCollections();
-        
-        const container = document.getElementById('collections-content');
-        showSuccess(container, 'Sammlung erfolgreich erstellt!');
-        
-      } catch (error) {
-        alert('Fehler beim Erstellen der Sammlung: ' + error.message);
       }
     }
 
@@ -2273,37 +784,23 @@
       const container = document.getElementById('authors-content');
       
       try {
-        const { data: authors, error } = await supabaseClient
-          .from('authors')
-          .select('*')
-          .order('name');
+        const { data: authors, error } = await supabaseClient.from('authors').select('*').order('name');
         
         if (error) throw error;
         
         authorsData = authors || [];
         
         if (authorsData.length === 0) {
-          showEmptyState(container, 'user', 'Noch keine Autoren vorhanden. Fügen Sie den ersten Autor hinzu!');
+          showEmptyState(container, '👤', 'Noch keine Autoren vorhanden. Fügen Sie den ersten Autor hinzu!');
         } else {
           const authorsHTML = authorsData.map(author => 
             createCard(
               author.name,
               'Autor',
               author.bio || 'Keine Biografie verfügbar',
-              author.photo,
               [
-                ...(author.nationality ? [{ icon: 'globe', text: author.nationality }] : []),
-                ...(author.birth_date ? [{ icon: 'birthday-cake', text: new Date(author.birth_date).toLocaleDateString() }] : [])
-              ],
-              [
-                {
-                  text: 'Details',
-                  icon: 'info-circle',
-                  onclick: `openAuthorDetailModal(${author.id})`
-                },
                 {
                   text: 'Löschen',
-                  icon: 'trash',
                   class: 'danger',
                   onclick: `deleteAuthor(${author.id}, '${author.name.replace(/'/g, "\\'")}')`
                 }
@@ -2313,13 +810,6 @@
           container.innerHTML = `<div class="grid">${authorsHTML}</div>`;
         }
         
-        // Also update the latest authors in dashboard
-        updateLatestAuthors();
-        
-        // Update filters
-        populateFilters();
-        
-        // Update stats
         updateStats();
         
       } catch (error) {
@@ -2346,29 +836,17 @@
         booksData = books || [];
         
         if (booksData.length === 0) {
-          showEmptyState(container, 'book', 'Noch keine Bücher vorhanden. Fügen Sie das erste Buch hinzu!');
+          showEmptyState(container, '📚', 'Noch keine Bücher vorhanden. Fügen Sie das erste Buch hinzu!');
         } else {
           const booksHTML = booksData.map(book => {
             const authorName = book.authors ? book.authors.name : 'Unbekannter Autor';
             return createCard(
               book.title,
               'Buch',
-              book.description || `Von: ${authorName}`,
-              book.cover_image,
+              `Von: ${authorName}`,
               [
-                { icon: 'user', text: authorName },
-                ...(book.genre ? [{ icon: 'tag', text: book.genre }] : []),
-                ...(book.publication_date ? [{ icon: 'calendar', text: new Date(book.publication_date).toLocaleDateString() }] : [])
-              ],
-              [
-                {
-                  text: 'Details',
-                  icon: 'info-circle',
-                  onclick: `openBookDetailModal(${book.id})`
-                },
                 {
                   text: 'Löschen',
-                  icon: 'trash',
                   class: 'danger',
                   onclick: `deleteBook(${book.id}, '${book.title.replace(/'/g, "\\'")}')`
                 }
@@ -2378,476 +856,16 @@
           container.innerHTML = `<div class="grid">${booksHTML}</div>`;
         }
         
-        // Also update the latest books in dashboard
-        updateLatestBooks();
-        
-        // Update filters
-        populateFilters();
-        
-        // Update stats
-        updateStats();
-        
-        // Update genre chart
-        updateGenreChart();
-        
-      } catch (error) {
-        showError(container, error.message);
-      }
-    }
-
-    async function loadCollections() {
-      const container = document.getElementById('collections-content');
-      
-      try {
-        const { data: collections, error } = await supabaseClient
-          .from('collections')
-          .select('*')
-          .order('name');
-        
-        if (error) throw error;
-        
-        collectionsData = collections || [];
-        
-        if (collectionsData.length === 0) {
-          showEmptyState(container, 'layer-group', 'Noch keine Sammlungen vorhanden. Erstellen Sie Ihre erste Sammlung!');
-        } else {
-          // For each collection, count the books
-          const collectionCounts = {};
-          
-          // Get all collection_books entries
-          const { data: collectionBooks, error: countError } = await supabaseClient
-            .from('collection_books')
-            .select('collection_id');
-            
-          if (countError) throw countError;
-          
-          // Count books per collection
-          (collectionBooks || []).forEach(entry => {
-            collectionCounts[entry.collection_id] = (collectionCounts[entry.collection_id] || 0) + 1;
-          });
-          
-          const collectionsHTML = collectionsData.map(collection => 
-            `<div class="collection-card">
-              <h3>${collection.name}</h3>
-              <p>${collection.description || 'Keine Beschreibung verfügbar'}</p>
-              <div class="collection-count">
-                <i class="fas fa-book"></i>
-                <span>${collectionCounts[collection.id] || 0} Bücher</span>
-              </div>
-              <div class="card-actions" style="margin-top: 1rem;">
-                <button class="card-action" onclick="viewCollection(${collection.id})">
-                  <i class="fas fa-eye"></i>
-                  Anzeigen
-                </button>
-                <button class="card-action danger" onclick="deleteCollection(${collection.id}, '${collection.name.replace(/'/g, "\\'")}')">
-                  <i class="fas fa-trash"></i>
-                  Löschen
-                </button>
-              </div>
-            </div>`
-          ).join('');
-          
-          container.innerHTML = `<div class="collection-grid">${collectionsHTML}</div>`;
-        }
-        
-        // Also update the collections preview in dashboard
-        updateCollectionsPreview();
-        
-        // Update stats
         updateStats();
         
       } catch (error) {
         showError(container, error.message);
       }
-    }
-
-    function updateLatestBooks() {
-      const container = document.getElementById('latest-books');
-      
-      if (booksData.length === 0) {
-        showEmptyState(container, 'book', 'Noch keine Bücher vorhanden.');
-        return;
-      }
-      
-      // Sort by created_at and take the latest 3
-      const latestBooks = [...booksData]
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 3);
-        
-      const booksHTML = latestBooks.map(book => {
-        const authorName = book.authors ? book.authors.name : 'Unbekannter Autor';
-        return `
-          <div class="card" style="margin-bottom: 1rem;" onclick="openBookDetailModal(${book.id})">
-            <div class="card-title">${book.title}</div>
-            <div class="card-subtitle">
-              <i class="fas fa-user"></i>
-              ${authorName}
-            </div>
-            ${book.genre ? `
-              <div class="badge">${book.genre}</div>
-            ` : ''}
-          </div>
-        `;
-      }).join('');
-      
-      container.innerHTML = booksHTML;
-    }
-
-    function updateLatestAuthors() {
-      const container = document.getElementById('latest-authors');
-      
-      if (authorsData.length === 0) {
-        showEmptyState(container, 'user', 'Noch keine Autoren vorhanden.');
-        return;
-      }
-      
-      // Sort by created_at and take the latest 3
-      const latestAuthors = [...authorsData]
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 3);
-        
-      const authorsHTML = latestAuthors.map(author => {
-        return `
-          <div class="card" style="margin-bottom: 1rem;" onclick="openAuthorDetailModal(${author.id})">
-            <div class="card-title">${author.name}</div>
-            ${author.nationality ? `
-              <div class="card-subtitle">
-                <i class="fas fa-globe"></i>
-                ${author.nationality}
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }).join('');
-      
-      container.innerHTML = authorsHTML;
-    }
-
-    function updateCollectionsPreview() {
-      const container = document.getElementById('collections-preview');
-      
-      if (collectionsData.length === 0) {
-        showEmptyState(container, 'layer-group', 'Noch keine Sammlungen vorhanden.');
-        return;
-      }
-      
-      // Take the first 3 collections
-      const previewCollections = collectionsData.slice(0, 3);
-        
-      const collectionsHTML = previewCollections.map(collection => {
-        return `
-          <div class="card" style="margin-bottom: 1rem;">
-            <div class="card-title">${collection.name}</div>
-            <div class="card-subtitle">Sammlung</div>
-          </div>
-        `;
-      }).join('');
-      
-      container.innerHTML = collectionsHTML;
-    }
-
-    function updateGenreChart() {
-      const ctx = document.getElementById('genres-chart');
-      
-      // Count books by genre
-      const genreCounts = {};
-      booksData.forEach(book => {
-        if (book.genre) {
-          genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
-        } else {
-          genreCounts['Ohne Genre'] = (genreCounts['Ohne Genre'] || 0) + 1;
-        }
-      });
-      
-      // Sort genres by count
-      const sortedGenres = Object.entries(genreCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 6); // Take top 6
-      
-      const labels = sortedGenres.map(entry => entry[0]);
-      const data = sortedGenres.map(entry => entry[1]);
-      
-      // Define colors based on theme
-      const isDark = currentTheme === 'dark';
-      const colors = isDark ? 
-        ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'] :
-        ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
-      
-      const textColor = isDark ? '#f5f5f7' : '#1d1d1f';
-      const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-      
-      // Destroy previous chart if it exists
-      if (genreChart) {
-        genreChart.destroy();
-      }
-      
-      // Create new chart
-      genreChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Anzahl der Bücher',
-            data: data,
-            backgroundColor: colors,
-            borderColor: colors,
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              backgroundColor: isDark ? '#1e1e1e' : 'white',
-              titleColor: textColor,
-              bodyColor: textColor,
-              borderColor: gridColor,
-              borderWidth: 1
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                color: textColor,
-                precision: 0
-              },
-              grid: {
-                color: gridColor
-              }
-            },
-            x: {
-              ticks: {
-                color: textColor
-              },
-              grid: {
-                color: gridColor
-              }
-            }
-          }
-        }
-      });
     }
 
     // Event Listeners
     document.getElementById('author-form').addEventListener('submit', addAuthor);
     document.getElementById('book-form').addEventListener('submit', addBook);
-    document.getElementById('collection-form').addEventListener('submit', addCollection);
-
-    // Filter event listeners
-    document.getElementById('author-filter').addEventListener('change', function() {
-      filterBooks();
-    });
-
-    document.getElementById('genre-filter').addEventListener('change', function() {
-      filterBooks();
-    });
-
-    document.getElementById('book-sort').addEventListener('change', function() {
-      filterBooks();
-    });
-
-    document.getElementById('nationality-filter').addEventListener('change', function() {
-      filterAuthors();
-    });
-
-    document.getElementById('author-sort').addEventListener('change', function() {
-      filterAuthors();
-    });
-
-    // Global search
-    document.getElementById('global-search').addEventListener('input', function(e) {
-      const searchTerm = e.target.value.toLowerCase().trim();
-      
-      if (searchTerm.length < 2) return;
-      
-      // Search in books
-      const filteredBooks = booksData.filter(book => 
-        book.title.toLowerCase().includes(searchTerm) || 
-        (book.description && book.description.toLowerCase().includes(searchTerm)) ||
-        (book.genre && book.genre.toLowerCase().includes(searchTerm)) ||
-        (book.authors && book.authors.name.toLowerCase().includes(searchTerm))
-      );
-      
-      // Search in authors
-      const filteredAuthors = authorsData.filter(author => 
-        author.name.toLowerCase().includes(searchTerm) || 
-        (author.bio && author.bio.toLowerCase().includes(searchTerm)) ||
-        (author.nationality && author.nationality.toLowerCase().includes(searchTerm))
-      );
-      
-      // If we have results, show the books tab with filtered results
-      if (filteredBooks.length > 0) {
-        showTab('books');
-        displayFilteredBooks(filteredBooks);
-      } 
-      // If no books but we have authors, show authors tab
-      else if (filteredAuthors.length > 0) {
-        showTab('authors');
-        displayFilteredAuthors(filteredAuthors);
-      }
-    });
-
-    function filterBooks() {
-      const authorId = document.getElementById('author-filter').value;
-      const genre = document.getElementById('genre-filter').value;
-      const sortBy = document.getElementById('book-sort').value;
-      
-      let filtered = [...booksData];
-      
-      // Filter by author
-      if (authorId) {
-        filtered = filtered.filter(book => book.author_id === parseInt(authorId));
-      }
-      
-      // Filter by genre
-      if (genre) {
-        filtered = filtered.filter(book => book.genre === genre);
-      }
-      
-      // Sort
-      switch (sortBy) {
-        case 'title':
-          filtered.sort((a, b) => a.title.localeCompare(b.title));
-          break;
-        case 'title-desc':
-          filtered.sort((a, b) => b.title.localeCompare(a.title));
-          break;
-        case 'author':
-          filtered.sort((a, b) => {
-            const authorA = a.authors ? a.authors.name : 'Unbekannt';
-            const authorB = b.authors ? b.authors.name : 'Unbekannt';
-            return authorA.localeCompare(authorB);
-          });
-          break;
-        case 'published':
-          filtered.sort((a, b) => {
-            if (!a.publication_date) return 1;
-            if (!b.publication_date) return -1;
-            return new Date(b.publication_date) - new Date(a.publication_date);
-          });
-          break;
-        case 'created':
-          filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          break;
-      }
-      
-      displayFilteredBooks(filtered);
-    }
-
-    function filterAuthors() {
-      const nationality = document.getElementById('nationality-filter').value;
-      const sortBy = document.getElementById('author-sort').value;
-      
-      let filtered = [...authorsData];
-      
-      // Filter by nationality
-      if (nationality) {
-        filtered = filtered.filter(author => author.nationality === nationality);
-      }
-      
-      // Sort
-      switch (sortBy) {
-        case 'name':
-          filtered.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        case 'name-desc':
-          filtered.sort((a, b) => b.name.localeCompare(a.name));
-          break;
-        case 'books':
-          filtered.sort((a, b) => {
-            const booksA = booksData.filter(book => book.author_id === a.id).length;
-            const booksB = booksData.filter(book => book.author_id === b.id).length;
-            return booksB - booksA;
-          });
-          break;
-        case 'created':
-          filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-          break;
-      }
-      
-      displayFilteredAuthors(filtered);
-    }
-
-    function displayFilteredBooks(filtered) {
-      const container = document.getElementById('books-content');
-      
-      if (filtered.length === 0) {
-        showEmptyState(container, 'search', 'Keine Bücher gefunden, die den Filterkriterien entsprechen.');
-        return;
-      }
-      
-      const booksHTML = filtered.map(book => {
-        const authorName = book.authors ? book.authors.name : 'Unbekannter Autor';
-        return createCard(
-          book.title,
-          'Buch',
-          book.description || `Von: ${authorName}`,
-          book.cover_image,
-          [
-            { icon: 'user', text: authorName },
-            ...(book.genre ? [{ icon: 'tag', text: book.genre }] : []),
-            ...(book.publication_date ? [{ icon: 'calendar', text: new Date(book.publication_date).toLocaleDateString() }] : [])
-          ],
-          [
-            {
-              text: 'Details',
-              icon: 'info-circle',
-              onclick: `openBookDetailModal(${book.id})`
-            },
-            {
-              text: 'Löschen',
-              icon: 'trash',
-              class: 'danger',
-              onclick: `deleteBook(${book.id}, '${book.title.replace(/'/g, "\\'")}')`
-            }
-          ]
-        );
-      }).join('');
-      
-      container.innerHTML = `<div class="grid">${booksHTML}</div>`;
-    }
-
-    function displayFilteredAuthors(filtered) {
-      const container = document.getElementById('authors-content');
-      
-      if (filtered.length === 0) {
-        showEmptyState(container, 'search', 'Keine Autoren gefunden, die den Filterkriterien entsprechen.');
-        return;
-      }
-      
-      const authorsHTML = filtered.map(author => 
-        createCard(
-          author.name,
-          'Autor',
-          author.bio || 'Keine Biografie verfügbar',
-          author.photo,
-          [
-            ...(author.nationality ? [{ icon: 'globe', text: author.nationality }] : []),
-            ...(author.birth_date ? [{ icon: 'birthday-cake', text: new Date(author.birth_date).toLocaleDateString() }] : [])
-          ],
-          [
-            {
-              text: 'Details',
-              icon: 'info-circle',
-              onclick: `openAuthorDetailModal(${author.id})`
-            },
-            {
-              text: 'Löschen',
-              icon: 'trash',
-              class: 'danger',
-              onclick: `deleteAuthor(${author.id}, '${author.name.replace(/'/g, "\\'")}')`
-            }
-          ]
-        )
-      ).join('');
-      
-      container.innerHTML = `<div class="grid">${authorsHTML}</div>`;
-    }
 
     // Close modals when clicking outside
     document.addEventListener('click', (e) => {
@@ -2874,72 +892,12 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNkbWZjbnJpeWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NDIzODUsImV4cCI6MjA2NzAxODM4NX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
         supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Create storage bucket if it doesn't exist
-        const { data: buckets } = await supabaseClient.storage.listBuckets();
-        if (!buckets.find(bucket => bucket.name === 'library-media')) {
-          await supabaseClient.storage.createBucket('library-media', {
-            public: true
-          });
-        }
-
-        // Create tables if they don't exist
-        const { error: authorsError } = await supabaseClient.rpc('create_table_if_not_exists', {
-          table_name: 'authors',
-          table_definition: `
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            bio TEXT,
-            birth_date DATE,
-            nationality TEXT,
-            photo TEXT,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-          `
-        });
-
-        const { error: booksError } = await supabaseClient.rpc('create_table_if_not_exists', {
-          table_name: 'books',
-          table_definition: `
-            id SERIAL PRIMARY KEY,
-            title TEXT NOT NULL,
-            author_id INTEGER REFERENCES authors(id),
-            description TEXT,
-            genre TEXT,
-            publication_date DATE,
-            page_count INTEGER,
-            cover_image TEXT,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-          `
-        });
-
-        const { error: collectionsError } = await supabaseClient.rpc('create_table_if_not_exists', {
-          table_name: 'collections',
-          table_definition: `
-            id SERIAL PRIMARY KEY,
-            name TEXT NOT NULL,
-            description TEXT,
-            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-          `
-        });
-
-        const { error: collectionBooksError } = await supabaseClient.rpc('create_table_if_not_exists', {
-          table_name: 'collection_books',
-          table_definition: `
-            collection_id INTEGER REFERENCES collections(id),
-            book_id INTEGER REFERENCES books(id),
-            PRIMARY KEY (collection_id, book_id)
-          `
-        });
-
-        if (authorsError || booksError || collectionsError || collectionBooksError) {
-          console.error('Fehler beim Erstellen der Tabellen:', authorsError || booksError || collectionsError || collectionBooksError);
-        }
-
-        await Promise.all([loadAuthors(), loadBooks(), loadCollections()]);
+        await Promise.all([loadAuthors(), loadBooks()]);
 
       } catch (error) {
         console.error('Fehler beim Initialisieren:', error);
-        document.getElementById('authors-content').innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Unerwarteter Fehler: ${error.message}</div>`;
-        document.getElementById('books-content').innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> Unerwarteter Fehler: ${error.message}</div>`;
+        document.getElementById('authors-content').innerHTML = `<div class="error">Unerwarteter Fehler: ${error.message}</div>`;
+        document.getElementById('books-content').innerHTML = `<div class="error">Unerwarteter Fehler: ${error.message}</div>`;
       }
     })();
   </script>
