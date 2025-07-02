@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Supabase Datenanzeige - base2</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase JS v2 als UMD-Bundle laden -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
     h1 { text-align: center; }
@@ -22,11 +23,10 @@
   <ul id="books-list">Lade Bücher...</ul>
 
   <script>
-    // Supabase Config - so wie von dir angegeben
     const SUPABASE_URL = 'https://hfmqpmtwecdmfcnriygl.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNmfGNyaWlsbGVyLmcwIiwiZGVmYXVsdCI6dHJ1ZX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
 
-    // Supabase Client initialisieren
+    // Supabase Client initialisieren (aus dem globalen "supabase" Objekt)
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function loadData() {
@@ -70,7 +70,6 @@
       }
     }
 
-    // Daten laden, sobald Seite fertig geladen ist
     window.onload = loadData;
   </script>
 </body>
