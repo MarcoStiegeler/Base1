@@ -24,6 +24,8 @@
   <script>
     const SUPABASE_URL = 'https://gbojxrkzwgjftdhzmyqg.supabase.co'; // Deine Supabase URL
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdib2p4cmt6d2dqZnRkaHpteXFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA4NDU4NzMsImV4cCI6MjA2NjQyMTg3M30.6GrxaH4cZm6Sr0sfx41OjG-pAifflSnFvrzfbFwf7i8'; // Dein anon public Key
+    console.log('Supabase URL:', SUPABASE_URL);
+    console.log('Supabase anon key (ersten 8 Zeichen):', SUPABASE_ANON_KEY.slice(0,8));
 
     // WICHTIG: keine Variable namens 'supabase' überschreiben, deswegen 'client' nehmen
     const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
