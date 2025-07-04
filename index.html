@@ -663,15 +663,16 @@
         const userId = data.user.id;
         const { data: allowed, error: allowedError } = await client
           .from('allowed_users')
-          .select('*')
-          .eq('user_id', userId)
-          .single();
-    
-        if (allowedError || !allowed) {
+          .select('user_id')
+          .eq('user_id', userId);
+
+        if (allowedError || !allowed || allowed.length === 0) {
           errorField.textContent = 'Zugriff verweigert: Du bist kein berechtigter Nutzer.';
           await client.auth.signOut();
           return;
         }
+
+
     
         // Login erfolgreich -> Login-Bereich verstecken, App zeigen
         document.getElementById('login').style.display = 'none';
