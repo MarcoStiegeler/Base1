@@ -519,8 +519,16 @@
   </style>
 </head>
 <body>
+  <div id="login" style="max-width: 400px; margin: 50px auto; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 0 12px rgba(0,0,0,0.15);">
+    <h2 style="text-align:center; margin-bottom:20px;">Login</h2>
+    <input id="login-email" type="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+    <input id="login-password" type="password" placeholder="Passwort" required style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #ccc;" />
+    <button onclick="handleLogin()" style="width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Einloggen</button>
+    <p id="login-error" style="color: red; margin-top: 12px; text-align: center;"></p>
+  </div>
+
   <div class="container">
-    <div class="hero">
+    <div class="hero" style="display:none;">
       <h1>Bibliothek</h1>
       <p>Verwalten Sie Ihre Sammlung von Autoren und Büchern</p>
       <div class="stats" id="stats" style="display: none;">
@@ -632,6 +640,55 @@
     let currentEditingBook = null;
     let authorsData = [];
     let booksData = [];
+
+    async function handleLogin() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const errorField = document.getElementById('login-error');
+      errorField.textContent = '';
+    
+      if (!email || !password) {
+        errorField.textContent = 'Bitte Email und Passwort eingeben.';
+        return;
+      }
+    
+      try {
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        if (error) {
+          errorField.textContent = 'Login fehlgeschlagen: ' + error.message;
+          return;
+        }
+    
+        // Beispiel: Zugriff prüfen in allowed_users-Tabelle
+        const userId = data.user.id;
+        const { data: allowed, error: allowedError } = await client
+          .from('allowed_users')
+          .select('*')
+          .eq('user_id', userId)
+          .single();
+    
+        if (allowedError || !allowed) {
+          errorField.textContent = 'Zugriff verweigert: Du bist kein berechtigter Nutzer.';
+          await client.auth.signOut();
+          return;
+        }
+    
+        // Login erfolgreich -> Login-Bereich verstecken, App zeigen
+        document.getElementById('login').style.display = 'none';
+        document.querySelector('.container').style.display = 'block';
+    
+        // Daten laden und Stats aktualisieren
+        await Promise.all([loadAuthors(), loadBooks()]);
+        updateStats();
+    
+        showNotification('Login erfolgreich!');
+    
+      } catch (err) {
+        console.error(err);
+        errorField.textContent = 'Fehler beim Login: ' + err.message;
+      }
+    }
+
 
     async function waitForSupabase() {
       return new Promise(resolve => {
@@ -928,9 +985,7 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmbXFwbXR3ZWNkbWZjbnJpeWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0NDIzODUsImV4cCI6MjA2NzAxODM4NX0.ROK9APe9jtDhSybs0jHiwjNy4CCzEsr-sP2l2NJ0SXM';
         client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Load initial data
-        await Promise.all([loadAuthors(), loadBooks()]);
-        updateStats();
+        
 
       } catch (error) {
         console.error('Fehler beim Initialisieren:', error);
