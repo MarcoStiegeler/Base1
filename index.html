@@ -482,8 +482,6 @@
       transform: translateX(0);
     }
 
-    #main-content { display: none; }
-
     .notification.success {
       background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
     }
@@ -521,26 +519,6 @@
   </style>
 </head>
 <body>
-  <!-- Login-Box -->
-  <div id="login-box">
-    <h2>Bitte einloggen</h2>
-    <form id="login-form">
-      <input type="email" id="email" placeholder="E-Mail" required />
-      <br>
-      <input type="password" id="password" placeholder="Passwort" required />
-      <br>
-      <button type="submit">Einloggen</button>
-    </form>
-    <div id="status"></div>
-  </div>
-
-  <!-- Versteckter Seiteninhalt -->
-  <div id="main-content">
-    <h1>Willkommen!</h1>
-    <p>Du bist eingeloggt und berechtigt.</p>
-    <button onclick="logout()">Logout</button>
-  </div>
-  
   <div class="container">
     <div class="hero">
       <h1>Bibliothek</h1>
@@ -654,65 +632,6 @@
     let currentEditingBook = null;
     let authorsData = [];
     let booksData = [];
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const loginForm = document.getElementById('login-form');
-    const statusBox = document.getElementById('status');
-    const loginBox = document.getElementById('login-box');
-    const mainContent = document.getElementById('main-content');
-
-    // Einloggen
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        statusBox.innerText = "❌ Fehler: " + error.message;
-      } else {
-        checkUserPermission();
-      }
-    });
-
-    // Prüfen ob user in allowed_users ist
-    async function checkUserPermission() {
-      const { data: { user }, error } = await supabase.auth.getUser();
-
-      if (!user) {
-        statusBox.innerText = "Nicht eingeloggt.";
-        return;
-      }
-
-      const { data, error: queryError } = await supabase
-        .from('allowed_users')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-
-      if (data) {
-        // Zugriff erlaubt
-        loginBox.style.display = "none";
-        mainContent.style.display = "block";
-      } else {
-        // Zugriff verweigert
-        await supabase.auth.signOut();
-        statusBox.innerText = "❌ Kein Zugriff – du bist nicht berechtigt.";
-      }
-    }
-
-    // Bei Seitenaufruf prüfen ob bereits eingeloggt
-    checkUserPermission();
-
-    // Logout
-    async function logout() {
-      await supabase.auth.signOut();
-      location.reload();
-    }
 
     async function waitForSupabase() {
       return new Promise(resolve => {
